@@ -100,7 +100,7 @@ export default function MemberProfilePage() {
             href="/community/members"
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
             返回成员列表
           </Link>
         </div>
@@ -114,7 +114,7 @@ export default function MemberProfilePage() {
                 </Badge>
               </div>
               <div className="flex flex-col items-center gap-4 md:flex-row">
-                <Avatar className="h-24 w-24">
+                <Avatar className="size-24">
                   <AvatarFallback>{member.avatar}</AvatarFallback>
                 </Avatar>
                 <div className="space-y-2 text-center md:text-left">
@@ -132,7 +132,7 @@ export default function MemberProfilePage() {
                 </div>
                 <div className="ml-auto flex gap-2">
                   <Button variant="outline" size="sm" className="gap-1" onClick={handleSendMessage}>
-                    <MessageSquare className="h-4 w-4" />
+                    <MessageSquare className="size-4" />
                     发送消息
                   </Button>
                   <Button
@@ -141,7 +141,7 @@ export default function MemberProfilePage() {
                     className="gap-1"
                     onClick={handleAddFriend}
                   >
-                    <Users className="h-4 w-4" />
+                    <Users className="size-4" />
                     {isFriend ? "取消好友" : "添加好友"}
                   </Button>
                 </div>
@@ -202,18 +202,18 @@ export default function MemberProfilePage() {
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <Mail className="size-4 text-muted-foreground" />
                         <p className="text-sm font-medium text-muted-foreground">邮箱</p>
                         <p>{member.contact.email}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <Phone className="size-4 text-muted-foreground" />
                         <p className="text-sm font-medium text-muted-foreground">电话</p>
                         <p>{member.contact.phone}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <svg
-                          className="h-4 w-4 text-muted-foreground"
+                          className="size-4 text-muted-foreground"
                           viewBox="0 0 24 24"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +232,7 @@ export default function MemberProfilePage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <svg
-                          className="h-4 w-4 text-muted-foreground"
+                          className="size-4 text-muted-foreground"
                           viewBox="0 0 24 24"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -246,7 +246,7 @@ export default function MemberProfilePage() {
                         <p>{member.contact.qq}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Github className="h-4 w-4 text-muted-foreground" />
+                        <Github className="size-4 text-muted-foreground" />
                         <p className="text-sm font-medium text-muted-foreground">GitHub</p>
                         <Link href={`https://${member.contact.github}`} className="text-primary hover:underline">
                           {member.contact.github}
@@ -291,14 +291,14 @@ export default function MemberProfilePage() {
                             </Link>
                           </h3>
                           <p className="mt-1 text-sm text-muted-foreground">发布于 {post.date}</p>
-                          <p className="mt-2 text-sm line-clamp-2">{post.content}</p>
+                          <p className="mt-2 line-clamp-2 text-sm">{post.content}</p>
                           <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
-                              <ThumbsUp className="h-4 w-4" />
+                              <ThumbsUp className="size-4" />
                               <span>{post.likes}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <MessageSquare className="h-4 w-4" />
+                              <MessageSquare className="size-4" />
                               <span>{post.comments}</span>
                             </div>
                           </div>

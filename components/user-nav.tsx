@@ -34,17 +34,17 @@ export function UserNav() {
     <div className="flex items-center gap-4">
       <Button variant="ghost" size="icon" asChild>
         <Link href="/notifications">
-          <Bell className="h-5 w-5" />
+          <Bell className="size-5" />
           <span className="sr-only">通知</span>
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+          <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
             3
           </span>
         </Link>
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="relative h-8 w-8 rounded-full">
-            <Avatar className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="relative size-8 rounded-full">
+            <Avatar className="size-8">
               <AvatarFallback>ZS</AvatarFallback>
             </Avatar>
           </Button>
@@ -59,19 +59,19 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href="/profile" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
+              <User className="size-4" />
               个人资料
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
+              <Settings className="size-4" />
               设置
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2">
-            <LogOut className="h-4 w-4" />
+            <LogOut className="size-4" />
             退出登录
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -11,7 +11,7 @@ export default function Loading() {
         <div className="space-y-6">
           <div className="relative rounded-xl bg-muted/50 p-6">
             <div className="flex flex-col items-center gap-4 md:flex-row">
-              <Skeleton className="h-24 w-24 rounded-full" />
+              <Skeleton className="size-24 rounded-full" />
               <div className="space-y-2 text-center md:text-left">
                 <Skeleton className="h-8 w-48" />
                 <Skeleton className="h-4 w-32" />

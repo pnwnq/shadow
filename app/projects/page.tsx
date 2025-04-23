@@ -30,7 +30,7 @@ export default function ProjectsPage() {
           <h1 className="text-2xl font-bold tracking-tight">项目管理</h1>
           <div className="flex items-center gap-2">
             <Button className="gap-1">
-              <Plus className="h-4 w-4" />
+              <Plus className="size-4" />
               创建项目
             </Button>
           </div>
@@ -51,7 +51,7 @@ export default function ProjectsPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className="size-4" />
                           <span className="sr-only">操作</span>
                         </Button>
                       </DropdownMenuTrigger>
@@ -74,25 +74,25 @@ export default function ProjectsPage() {
                     </div>
                     <Progress value={65} className="h-2" />
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="size-4" />
                       <span>截止日期: 2024-06-30</span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between pt-2">
                   <div className="flex -space-x-2">
-                    <Avatar className="border-2 border-background h-7 w-7">
+                    <Avatar className="size-7 border-2 border-background">
                       <AvatarFallback>ZS</AvatarFallback>
                     </Avatar>
-                    <Avatar className="border-2 border-background h-7 w-7">
+                    <Avatar className="size-7 border-2 border-background">
                       <AvatarFallback>LS</AvatarFallback>
                     </Avatar>
-                    <Avatar className="border-2 border-background h-7 w-7">
+                    <Avatar className="size-7 border-2 border-background">
                       <AvatarFallback>WW</AvatarFallback>
                     </Avatar>
                   </div>
                   <Button variant="outline" size="sm" className="gap-1">
-                    <FolderKanban className="h-4 w-4" />
+                    <FolderKanban className="size-4" />
                     任务
                   </Button>
                 </CardFooter>
@@ -104,7 +104,7 @@ export default function ProjectsPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className="size-4" />
                           <span className="sr-only">操作</span>
                         </Button>
                       </DropdownMenuTrigger>
@@ -127,22 +127,22 @@ export default function ProjectsPage() {
                     </div>
                     <Progress value={40} className="h-2" />
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="size-4" />
                       <span>截止日期: 2024-07-15</span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between pt-2">
                   <div className="flex -space-x-2">
-                    <Avatar className="border-2 border-background h-7 w-7">
+                    <Avatar className="size-7 border-2 border-background">
                       <AvatarFallback>ZL</AvatarFallback>
                     </Avatar>
-                    <Avatar className="border-2 border-background h-7 w-7">
+                    <Avatar className="size-7 border-2 border-background">
                       <AvatarFallback>WL</AvatarFallback>
                     </Avatar>
                   </div>
                   <Button variant="outline" size="sm" className="gap-1">
-                    <FolderKanban className="h-4 w-4" />
+                    <FolderKanban className="size-4" />
                     任务
                   </Button>
                 </CardFooter>
@@ -156,7 +156,7 @@ export default function ProjectsPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className="size-4" />
                           <span className="sr-only">操作</span>
                         </Button>
                       </DropdownMenuTrigger>
@@ -179,22 +179,22 @@ export default function ProjectsPage() {
                     </div>
                     <Progress value={100} className="h-2" />
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="size-4" />
                       <span>完成日期: 2024-03-20</span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between pt-2">
                   <div className="flex -space-x-2">
-                    <Avatar className="border-2 border-background h-7 w-7">
+                    <Avatar className="size-7 border-2 border-background">
                       <AvatarFallback>ZS</AvatarFallback>
                     </Avatar>
-                    <Avatar className="border-2 border-background h-7 w-7">
+                    <Avatar className="size-7 border-2 border-background">
                       <AvatarFallback>LS</AvatarFallback>
                     </Avatar>
                   </div>
                   <Button variant="outline" size="sm" className="gap-1">
-                    <FolderKanban className="h-4 w-4" />
+                    <FolderKanban className="size-4" />
                     任务
                   </Button>
                 </CardFooter>

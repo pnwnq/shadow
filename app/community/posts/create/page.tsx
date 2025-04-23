@@ -43,7 +43,7 @@ export default function CreatePostPage() {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/community" className="flex items-center gap-1">
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
               返回社区
             </Link>
           </Button>

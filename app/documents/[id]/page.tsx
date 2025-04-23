@@ -126,7 +126,17 @@ export default function DocumentDetailPage() {
   const [comment, setComment] = useState("")
   const [isStarred, setIsStarred] = useState(false)
 
-  const docId = params.id as string
+  // Safely get docId from params with explicit checks
+  let docId: string | undefined;
+  if (params) { // Check if params exists first
+    if (typeof params.id === 'string') {
+      docId = params.id;
+    }
+    else if (Array.isArray(params.id) && params.id.length > 0) {
+      docId = params.id[0];
+    }
+  }
+  
   const document = documents.find((doc) => doc.id === docId)
 
   const handleDownload = () => {
@@ -162,12 +172,13 @@ export default function DocumentDetailPage() {
     setComment("")
   }
 
-  if (!document) {
+  // Check if docId or document is missing
+  if (!docId || !document) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold">文档不存在</h2>
-          <p className="mt-2 text-muted-foreground">找不到请求的文档</p>
+          <p className="mt-2 text-muted-foreground">无法找到文档 ID 或文档本身</p>
           <Button className="mt-4" asChild>
             <Link href="/documents">返回文档列表</Link>
           </Button>
@@ -211,8 +222,8 @@ export default function DocumentDetailPage() {
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold">{document.title}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <FileText className="h-4 w-4 text-muted-foreground" />
+          <div className="mt-1 flex items-center gap-2">
+            <FileText className="size-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
               {document.type} · {document.size}
             </span>
@@ -220,24 +231,24 @@ export default function DocumentDetailPage() {
             <span className="text-sm text-muted-foreground">上传于 {document.uploadDate}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 mt-2 md:mt-0">
+        <div className="mt-2 flex items-center gap-2 md:mt-0">
           <Button variant="outline" size="sm" className="gap-1" onClick={handleStar}>
-            <Star className={`h-4 w-4 ${isStarred ? "fill-primary text-primary" : ""}`} />
+            <Star className={`size-4 ${isStarred ? "fill-primary text-primary" : ""}`} />
             {isStarred ? "已收藏" : "收藏"}
           </Button>
           <Button variant="outline" size="sm" className="gap-1" onClick={handleShare}>
-            <Share2 className="h-4 w-4" />
+            <Share2 className="size-4" />
             分享
           </Button>
           <Button variant="default" size="sm" className="gap-1" onClick={handleDownload}>
-            <Download className="h-4 w-4" />
+            <Download className="size-4" />
             下载
           </Button>
         </div>
       </div>
 
       <div className="flex flex-col gap-6 md:flex-row">
-        <div className="md:w-2/3 space-y-6">
+        <div className="space-y-6 md:w-2/3">
           <Card>
             <CardHeader>
               <CardTitle>文档预览</CardTitle>
@@ -246,7 +257,7 @@ export default function DocumentDetailPage() {
             <CardContent>
               <div className="flex h-[400px] items-center justify-center rounded-lg border bg-muted/50">
                 <div className="text-center">
-                  <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+                  <FileText className="mx-auto size-12 text-muted-foreground" />
                   <h3 className="mt-4 text-lg font-medium">文档预览</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {document.type === "PDF"
@@ -258,7 +269,7 @@ export default function DocumentDetailPage() {
                           : "文件预览功能即将上线"}
                   </p>
                   <Button variant="outline" className="mt-4 gap-2" onClick={handleDownload}>
-                    <Download className="h-4 w-4" />
+                    <Download className="size-4" />
                     下载文档
                   </Button>
                 </div>
@@ -293,7 +304,7 @@ export default function DocumentDetailPage() {
             <CardContent className="space-y-4">
               {document.comments.map((comment) => (
                 <div key={comment.id} className="flex gap-3">
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="size-8">
                     <AvatarFallback>{comment.author.avatar}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 space-y-1">
@@ -307,13 +318,13 @@ export default function DocumentDetailPage() {
                       <span className="text-xs text-muted-foreground">{comment.date}</span>
                     </div>
                     <p className="text-sm">{comment.content}</p>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="mt-1 flex items-center gap-2">
                       <Button variant="ghost" size="sm" className="h-7 gap-1 px-2">
-                        <ThumbsUp className="h-3 w-3" />
+                        <ThumbsUp className="size-3" />
                         <span className="text-xs">赞</span>
                       </Button>
                       <Button variant="ghost" size="sm" className="h-7 gap-1 px-2">
-                        <MessageSquare className="h-3 w-3" />
+                        <MessageSquare className="size-3" />
                         <span className="text-xs">回复</span>
                       </Button>
                     </div>
@@ -343,7 +354,7 @@ export default function DocumentDetailPage() {
           </Card>
         </div>
 
-        <div className="md:w-1/3 space-y-6">
+        <div className="space-y-6 md:w-1/3">
           <Card>
             <CardHeader>
               <CardTitle>文档信息</CardTitle>
@@ -413,8 +424,8 @@ export default function DocumentDetailPage() {
                         <span className="text-xs text-muted-foreground">{version.date}</span>
                       </div>
                       <p className="text-sm text-muted-foreground">{version.description}</p>
-                      <Button variant="outline" size="sm" className="gap-1 w-full mt-2">
-                        <ArrowDown className="h-4 w-4" />
+                      <Button variant="outline" size="sm" className="mt-2 w-full gap-1">
+                        <ArrowDown className="size-4" />
                         下载此版本
                       </Button>
                     </div>
@@ -438,7 +449,7 @@ export default function DocumentDetailPage() {
                   .slice(0, 3)
                   .map((doc) => (
                     <div key={doc.id} className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
+                      <FileText className="size-4 text-muted-foreground" />
                       <div className="flex-1">
                         <Link href={`/documents/${doc.id}`} className="text-sm hover:text-primary hover:underline">
                           {doc.title}
@@ -453,7 +464,7 @@ export default function DocumentDetailPage() {
                   .filter((doc) => doc.id !== document.id)
                   .filter(
                     (doc) => doc.category === document.category || doc.tags.some((tag) => document.tags.includes(tag)),
-                  ).length === 0 && <p className="text-sm text-muted-foreground text-center py-2">暂无相关文档</p>}
+                  ).length === 0 && <p className="py-2 text-center text-sm text-muted-foreground">暂无相关文档</p>}
               </div>
             </CardContent>
           </Card>

@@ -30,7 +30,7 @@ export function MemberCard({ member }: MemberCardProps) {
         </div>
       </CardHeader>
       <CardContent className="pb-2 text-center">
-        <Avatar className="mx-auto h-20 w-20">
+        <Avatar className="mx-auto size-20">
           <AvatarFallback>{member.avatar}</AvatarFallback>
         </Avatar>
         <CardTitle className="mt-2 text-lg">

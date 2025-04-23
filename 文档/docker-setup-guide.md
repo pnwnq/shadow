@@ -2,14 +2,32 @@
 
 本文档旨在指导如何在新的开发环境中，使用 Docker 和 Docker Compose 快速启动并运行 "Shadow" 实验室管理系统项目。
 
+## 常用命令速查
+
+以下是在设置和日常开发中可能用到的一些主要命令（请在项目根目录下运行）：
+
+- **克隆仓库:** `git clone <你的仓库 URL>`
+- **进入目录:** `cd <项目目录>`
+- **安装 pnpm (全局):** `npm install -g pnpm`
+- **复制环境变量文件:** `cp .env.example .env.local`
+- **生成 NEXTAUTH_SECRET:** `openssl rand -base64 32`
+- **首次构建并启动 Docker 服务:** `docker-compose up --build`
+- **启动 Docker 服务:** `docker-compose up`
+- **停止 Docker 服务:** 在运行 `docker-compose up` 的终端按 `Ctrl + C`
+- **停止并移除 Docker 容器/网络:** `docker-compose down`
+- **进入应用容器内部:** `docker exec -it taxonomy-app sh`
+- **添加 Shadcn UI 组件 (在宿主机):** `pnpm dlx shadcn@latest add <component_name>`
+
+---
+
 ## 1. 先决条件
 
 在开始之前，请确保你的新电脑上安装了以下软件：
 
 1.  **Docker Desktop:** 从 Docker 官网下载并安装适合你操作系统的 Docker Desktop。对于 Windows，建议使用基于 WSL 2 的后端。
-2.  **Git:** 用于克隆项目代码仓库。
+2.  **Git:** 用于克隆项目代码仓库和后续的版本控制。
 3.  **(可选) 代码编辑器:** 如 VS Code 或 Cursor。
-4.  **(可选) pnpm:** 虽然项目在 Docker 内运行，但本地有时也可能需要 pnpm (比如运行 `shadcn-ui` 命令)。可以通过 `npm install -g pnpm` 安装。
+4.  **pnpm (推荐安装):** 虽然项目主要在 Docker 内运行，但**强烈推荐**在你的宿主机上也安装 pnpm。这主要用于在本地运行 `shadcn` CLI 命令来添加新的 UI 组件 (如 `pnpm dlx shadcn@latest add button`)。可以通过 `npm install -g pnpm` 安装。
 
 ## 2. 获取项目代码
 
@@ -26,10 +44,7 @@ cd <项目目录> # 例如 cd taxonomy-main
 
 1.  **复制示例文件:** 在项目根目录下，将 `.env.example` 文件复制一份并重命名为 `.env.local`。
     ```bash
-    # Windows (PowerShell)
-    copy .env.example .env.local
-    # Linux / macOS / Git Bash
-    # cp .env.example .env.local
+    cp .env.example .env.local
     ```
 2.  **编辑 `.env.local`:** 打开 `.env.local` 文件，根据你的需求进行配置：
     *   `NEXTAUTH_SECRET`: **必须**替换为你自己生成的强随机字符串（可以使用 `openssl rand -base64 32` 命令生成）。
@@ -39,11 +54,11 @@ cd <项目目录> # 例如 cd taxonomy-main
 
 ## 4. 首次启动 (构建镜像并运行)
 
-打开你的终端 (Windows 建议使用 PowerShell)，确保你位于项目根目录下。
+打开你的终端 (例如 Git Bash, PowerShell, 或其他 Linux/macOS 终端)，确保你位于项目根目录下。
 
 运行以下命令来构建 Docker 镜像并首次启动服务：
 
-```powershell
+```bash
 docker-compose up --build
 ```
 
@@ -71,7 +86,7 @@ docker-compose up --build
 
 在首次成功构建和启动后，以后再想启动项目，只需要在项目根目录下运行：
 
-```powershell
+```bash
 docker-compose up
 ```
 
@@ -79,6 +94,11 @@ docker-compose up
 
 ## 7. 开发与调试
 
+*   **添加 UI 组件:** 如果需要添加新的 `shadcn/ui` 组件 (例如 `button`, `dialog` 等)，你需要在**宿主机**的项目根目录下运行以下命令 (确保已安装 pnpm):
+    ```bash
+    pnpm dlx shadcn@latest add <component_name> 
+    ```
+    例如: `pnpm dlx shadcn@latest add dialog`。添加后可能需要重启 Docker 服务 (`Ctrl+C` 然后 `docker-compose up`)。
 *   **热重载/手动刷新:**
     *   **现状:** 经过排查，在当前的 Docker (Windows + WSL 2) 环境下，**自动热重载可能无法正常工作**（即修改代码后浏览器不会自动更新）。
     *   **解决方案:** 修改代码并保存后，需要**手动在浏览器中进行硬刷新 (按 Ctrl+Shift+R 或 Cmd+Shift+R)** 才能看到更改。我们已在 `docker-compose.yml` 中为 `app` 服务添加了 `WATCHPACK_POLLING: "true"` 环境变量，这似乎确保了手动刷新时能获取到最新代码。
@@ -95,6 +115,10 @@ docker-compose up
 在运行 `docker-compose up` 的终端按 `Ctrl + C` 即可停止所有服务。
 
 如果想彻底移除容器和网络（但不包括数据库数据卷），可以运行 `docker-compose down`。
+
+```bash
+docker-compose down
+```
 
 ---
 

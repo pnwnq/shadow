@@ -112,11 +112,41 @@ export default function DocumentTypePage() {
   const [viewMode, setViewMode] = useState<"list" | "grid">("grid")
   const [searchTerm, setSearchTerm] = useState("")
 
-  const type = params.type as string
-  const typeTitle = typeMap[type] || "未知类型"
+  // Safely get type from params
+  let type: string | undefined;
+  if (params) { // Check if params exists first
+    if (typeof params.type === 'string') {
+      type = params.type;
+    }
+    else if (Array.isArray(params.type) && params.type.length > 0) {
+      // 虽然不太可能，但以防万一 params.type 是数组
+      type = params.type[0];
+    }
+  }
 
-  // 根据类型筛选文档
-  const documents = allDocuments.filter((doc) => doc.type === type)
+  const typeTitle = type ? typeMap[type] || "未知类型" : "未知类型";
+
+  // 根据类型筛选文档 (如果 type 存在)
+  const documents = type ? allDocuments.filter((doc) => doc.type === type) : [];
+
+  // Check if type is valid or documents found
+  if (!type || documents.length === 0) {
+    // Optionally, show a specific message if type is invalid vs. no documents found
+    return (
+      <div className="flex min-h-screen w-full flex-col">
+      <SiteHeader />
+      <main className="flex flex-1 items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold">类型错误或无文档</h2>
+          <p className="mt-2 text-muted-foreground">无法找到类型或该类型下没有文档</p>
+          <Button className="mt-4" asChild>
+            <Link href="/documents">返回文档管理</Link>
+          </Button>
+        </div>
+      </main>
+      </div>
+    )
+  }
 
   const handleUpload = () => {
     router.push("/documents/upload")
@@ -146,13 +176,13 @@ export default function DocumentTypePage() {
           <h1 className="text-2xl font-bold tracking-tight">{typeTitle}</h1>
           <div className="flex items-center gap-2">
             <Button className="gap-1" onClick={handleUpload}>
-              <Plus className="h-4 w-4" />
+              <Plus className="size-4" />
               上传文档
             </Button>
           </div>
         </div>
         <div className="flex flex-col gap-4 md:flex-row md:items-start">
-          <div className="md:w-1/4 lg:w-1/5 space-y-4">
+          <div className="space-y-4 md:w-1/4 lg:w-1/5">
             <div className="rounded-lg border p-4">
               <h2 className="mb-2 font-semibold">文档分类</h2>
               <div className="space-y-2">
@@ -237,15 +267,15 @@ export default function DocumentTypePage() {
               </div>
             </div>
           </div>
-          <div className="md:w-3/4 lg:w-4/5 space-y-4">
+          <div className="space-y-4 md:w-3/4 lg:w-4/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-1">
-                      <Filter className="h-4 w-4" />
+                      <Filter className="size-4" />
                       筛选
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
@@ -259,9 +289,9 @@ export default function DocumentTypePage() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-1">
-                      <SlidersHorizontal className="h-4 w-4" />
+                      <SlidersHorizontal className="size-4" />
                       排序
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
@@ -289,7 +319,7 @@ export default function DocumentTypePage() {
                   size="icon"
                   onClick={() => setViewMode("list")}
                 >
-                  <List className="h-4 w-4" />
+                  <List className="size-4" />
                   <span className="sr-only">列表视图</span>
                 </Button>
                 <Button
@@ -297,7 +327,7 @@ export default function DocumentTypePage() {
                   size="icon"
                   onClick={() => setViewMode("grid")}
                 >
-                  <Grid3X3 className="h-4 w-4" />
+                  <Grid3X3 className="size-4" />
                   <span className="sr-only">网格视图</span>
                 </Button>
               </div>
@@ -313,7 +343,7 @@ export default function DocumentTypePage() {
                       </CardHeader>
                       <CardContent className="pb-2">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <FileText className="h-4 w-4" />
+                          <FileText className="size-4" />
                           <span>
                             {doc.type.toUpperCase()} · {doc.size}
                           </span>
@@ -324,7 +354,7 @@ export default function DocumentTypePage() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon">
-                              <ChevronDown className="h-4 w-4" />
+                              <ChevronDown className="size-4" />
                               <span className="sr-only">操作</span>
                             </Button>
                           </DropdownMenuTrigger>
@@ -344,7 +374,7 @@ export default function DocumentTypePage() {
                 </div>
               ) : (
                 <div className="rounded-md border">
-                  <div className="grid grid-cols-12 gap-2 p-4 font-medium border-b">
+                  <div className="grid grid-cols-12 gap-2 border-b p-4 font-medium">
                     <div className="col-span-5">文件名</div>
                     <div className="col-span-2">类型</div>
                     <div className="col-span-2">大小</div>
@@ -352,9 +382,9 @@ export default function DocumentTypePage() {
                     <div className="col-span-1">操作</div>
                   </div>
                   {documents.map((doc) => (
-                    <div key={doc.id} className="grid grid-cols-12 gap-2 p-4 border-b hover:bg-muted/50">
+                    <div key={doc.id} className="grid grid-cols-12 gap-2 border-b p-4 hover:bg-muted/50">
                       <div className="col-span-5 flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        <FileText className="size-4 text-muted-foreground" />
                         <Link href={`/documents/${doc.id}`} className="hover:text-primary">
                           {doc.title}
                         </Link>
@@ -366,7 +396,7 @@ export default function DocumentTypePage() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon">
-                              <ChevronDown className="h-4 w-4" />
+                              <ChevronDown className="size-4" />
                               <span className="sr-only">操作</span>
                             </Button>
                           </DropdownMenuTrigger>
@@ -387,11 +417,11 @@ export default function DocumentTypePage() {
               )
             ) : (
               <div className="flex h-60 flex-col items-center justify-center rounded-lg border p-8 text-center">
-                <FileText className="h-10 w-10 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2">没有找到文档</h3>
-                <p className="text-muted-foreground mb-6">该类型下暂无文档，您可以上传新文档</p>
+                <FileText className="mb-4 size-10 text-muted-foreground" />
+                <h3 className="mb-2 text-lg font-medium">没有找到文档</h3>
+                <p className="mb-6 text-muted-foreground">该类型下暂无文档，您可以上传新文档</p>
                 <Button onClick={handleUpload}>
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="mr-2 size-4" />
                   上传新文档
                 </Button>
               </div>

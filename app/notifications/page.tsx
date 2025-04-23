@@ -101,17 +101,17 @@ export default function NotificationsPage() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "friend":
-        return <Users className="h-5 w-5 text-blue-500" />
+        return <Users className="size-5 text-blue-500" />
       case "comment":
-        return <MessageSquare className="h-5 w-5 text-green-500" />
+        return <MessageSquare className="size-5 text-green-500" />
       case "borrow":
-        return <Package className="h-5 w-5 text-yellow-500" />
+        return <Package className="size-5 text-yellow-500" />
       case "project":
-        return <FolderKanban className="h-5 w-5 text-purple-500" />
+        return <FolderKanban className="size-5 text-purple-500" />
       case "document":
-        return <FileText className="h-5 w-5 text-red-500" />
+        return <FileText className="size-5 text-red-500" />
       default:
-        return <MessageSquare className="h-5 w-5" />
+        return <MessageSquare className="size-5" />
     }
   }
 
@@ -160,7 +160,7 @@ export default function NotificationsPage() {
                       <p className="text-sm text-muted-foreground">{notification.description}</p>
                       {notification.user && (
                         <div className="flex items-center gap-2 pt-1">
-                          <Avatar className="h-6 w-6">
+                          <Avatar className="size-6">
                             <AvatarFallback>{notification.user.avatar}</AvatarFallback>
                           </Avatar>
                           <Link
@@ -185,7 +185,7 @@ export default function NotificationsPage() {
                               handleAction(notification.id, "accept")
                             }}
                           >
-                            <Check className="mr-1 h-4 w-4" />
+                            <Check className="mr-1 size-4" />
                             接受
                           </Button>
                         )}
@@ -201,7 +201,7 @@ export default function NotificationsPage() {
                             拒绝
                           </Button>
                         )}
-                        {!notification.read && <span className="ml-auto flex h-2 w-2 rounded-full bg-primary"></span>}
+                        {!notification.read && <span className="ml-auto flex size-2 rounded-full bg-primary"></span>}
                       </div>
                     </div>
                   </div>
@@ -239,7 +239,7 @@ export default function NotificationsPage() {
                         <p className="text-sm text-muted-foreground">{notification.description}</p>
                         {notification.user && (
                           <div className="flex items-center gap-2 pt-1">
-                            <Avatar className="h-6 w-6">
+                            <Avatar className="size-6">
                               <AvatarFallback>{notification.user.avatar}</AvatarFallback>
                             </Avatar>
                             <Link
@@ -264,7 +264,7 @@ export default function NotificationsPage() {
                                 handleAction(notification.id, "accept")
                               }}
                             >
-                              <Check className="mr-1 h-4 w-4" />
+                              <Check className="mr-1 size-4" />
                               接受
                             </Button>
                           )}
@@ -280,7 +280,7 @@ export default function NotificationsPage() {
                               拒绝
                             </Button>
                           )}
-                          <span className="ml-auto flex h-2 w-2 rounded-full bg-primary"></span>
+                          <span className="ml-auto flex size-2 rounded-full bg-primary"></span>
                         </div>
                       </div>
                     </div>

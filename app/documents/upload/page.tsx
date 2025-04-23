@@ -97,7 +97,7 @@ export default function UploadDocumentPage() {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/documents" className="flex items-center gap-1">
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
               返回文档列表
             </Link>
           </Button>
@@ -156,7 +156,7 @@ export default function UploadDocumentPage() {
                       <div className="flex w-full flex-col items-center">
                         <div className="flex w-full items-center justify-between rounded-md border bg-background p-2">
                           <div className="flex items-center gap-2">
-                            <FileText className="h-8 w-8 text-primary" />
+                            <FileText className="size-8 text-primary" />
                             <div className="flex flex-col">
                               <span className="text-sm font-medium">{selectedFile.name}</span>
                               <span className="text-xs text-muted-foreground">
@@ -173,13 +173,13 @@ export default function UploadDocumentPage() {
                               handleRemoveFile()
                             }}
                           >
-                            <X className="h-4 w-4" />
+                            <X className="size-4" />
                           </Button>
                         </div>
                       </div>
                     ) : (
                       <>
-                        <Upload className="mb-2 h-10 w-10 text-muted-foreground" />
+                        <Upload className="mb-2 size-10 text-muted-foreground" />
                         <p className="mb-1 text-sm font-medium">拖放文件到此处或点击上传</p>
                         <p className="text-xs text-muted-foreground">
                           支持 PDF, Word, Excel, PowerPoint, TXT, ZIP, RAR 格式

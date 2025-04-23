@@ -14,7 +14,7 @@ export function SiteHeader() {
         </div>
         <div className="flex items-center gap-4">
           <div className="relative hidden md:flex">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
             <Input type="search" placeholder="搜索..." className="w-64 rounded-lg pl-8" />
           </div>
           <UserNav />

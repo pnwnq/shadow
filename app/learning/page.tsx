@@ -53,7 +53,7 @@ export default function LearningPage() {
                       <span>初级</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <BookOpen className="h-4 w-4" />
+                      <BookOpen className="size-4" />
                       <span>5个模块 · 15个课程</span>
                     </div>
                   </div>
@@ -62,7 +62,7 @@ export default function LearningPage() {
                   <span className="text-xs text-muted-foreground">预计学习时间: 4周</span>
                   <Button variant="outline" size="sm" className="gap-1">
                     开始学习
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="size-4" />
                   </Button>
                 </CardFooter>
               </Card>
@@ -78,7 +78,7 @@ export default function LearningPage() {
                       <span>中级</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <BookOpen className="h-4 w-4" />
+                      <BookOpen className="size-4" />
                       <span>4个模块 · 12个课程</span>
                     </div>
                   </div>
@@ -87,7 +87,7 @@ export default function LearningPage() {
                   <span className="text-xs text-muted-foreground">预计学习时间: 6周</span>
                   <Button variant="outline" size="sm" className="gap-1">
                     开始学习
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="size-4" />
                   </Button>
                 </CardFooter>
               </Card>
@@ -103,7 +103,7 @@ export default function LearningPage() {
                       <span>中级</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <BookOpen className="h-4 w-4" />
+                      <BookOpen className="size-4" />
                       <span>6个模块 · 18个课程</span>
                     </div>
                   </div>
@@ -112,7 +112,7 @@ export default function LearningPage() {
                   <span className="text-xs text-muted-foreground">预计学习时间: 8周</span>
                   <Button variant="outline" size="sm" className="gap-1">
                     开始学习
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="size-4" />
                   </Button>
                 </CardFooter>
               </Card>
@@ -126,7 +126,7 @@ export default function LearningPage() {
                 </CardHeader>
                 <CardContent className="pb-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FileText className="h-4 w-4" />
+                    <FileText className="size-4" />
                     <span>PDF · 2.4 MB</span>
                   </div>
                 </CardContent>
@@ -135,7 +135,7 @@ export default function LearningPage() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className="size-4" />
                         <span className="sr-only">操作</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -154,7 +154,7 @@ export default function LearningPage() {
                 </CardHeader>
                 <CardContent className="pb-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FileText className="h-4 w-4" />
+                    <FileText className="size-4" />
                     <span>视频 · 10集</span>
                   </div>
                 </CardContent>
@@ -163,7 +163,7 @@ export default function LearningPage() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className="size-4" />
                         <span className="sr-only">操作</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -182,7 +182,7 @@ export default function LearningPage() {
                 </CardHeader>
                 <CardContent className="pb-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FileText className="h-4 w-4" />
+                    <FileText className="size-4" />
                     <span>PDF · 5.2 MB</span>
                   </div>
                 </CardContent>
@@ -191,7 +191,7 @@ export default function LearningPage() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className="size-4" />
                         <span className="sr-only">操作</span>
                       </Button>
                     </DropdownMenuTrigger>

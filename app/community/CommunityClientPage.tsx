@@ -76,13 +76,13 @@ export default function CommunityClientPage() {
         <h1 className="text-2xl font-bold tracking-tight">社区交流</h1>
         <div className="flex items-center gap-2">
           <Button className="gap-1" onClick={handleCreatePost}>
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
             发布博客
           </Button>
         </div>
       </div>
       <div className="flex flex-col gap-4 md:flex-row md:items-start">
-        <div className="md:w-1/4 lg:w-1/5 space-y-4">
+        <div className="space-y-4 md:w-1/4 lg:w-1/5">
           <div className="rounded-lg border p-4">
             <h2 className="mb-2 font-semibold">分类</h2>
             <div className="space-y-2">
@@ -131,7 +131,7 @@ export default function CommunityClientPage() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Link href="/community/members/zhangsan" className="flex items-center gap-2 text-sm hover:text-primary">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">ZS</div>
+                  <div className="flex size-8 items-center justify-center rounded-full bg-muted">ZS</div>
                   <div>
                     <p className="font-medium">张三</p>
                     <p className="text-xs text-muted-foreground">发表了 15 篇博客</p>
@@ -140,7 +140,7 @@ export default function CommunityClientPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Link href="/community/members/lisi" className="flex items-center gap-2 text-sm hover:text-primary">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">LS</div>
+                  <div className="flex size-8 items-center justify-center rounded-full bg-muted">LS</div>
                   <div>
                     <p className="font-medium">李四</p>
                     <p className="text-xs text-muted-foreground">发表了 12 篇博客</p>
@@ -149,7 +149,7 @@ export default function CommunityClientPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Link href="/community/members/wangwu" className="flex items-center gap-2 text-sm hover:text-primary">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">WW</div>
+                  <div className="flex size-8 items-center justify-center rounded-full bg-muted">WW</div>
                   <div>
                     <p className="font-medium">王五</p>
                     <p className="text-xs text-muted-foreground">发表了 8 篇博客</p>
@@ -164,7 +164,7 @@ export default function CommunityClientPage() {
             </div>
           </div>
         </div>
-        <div className="md:w-3/4 lg:w-4/5 space-y-4">
+        <div className="space-y-4 md:w-3/4 lg:w-4/5">
           <Tabs defaultValue="latest" className="w-full">
             <TabsList className="w-full justify-start">
               <TabsTrigger value="latest">最新</TabsTrigger>

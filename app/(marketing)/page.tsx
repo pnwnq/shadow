@@ -54,19 +54,19 @@ export default function Home() {
       <header className="sticky top-0 z-40 border-b bg-background">
         <div className="container flex h-16 items-center justify-between py-4">
           <div className="flex items-center gap-2">
-            <Microscope className="h-6 w-6" />
+            <Microscope className="size-6" />
             <span className="text-xl font-bold">Shadow</span>
           </div>
           <nav className="flex items-center gap-4">
             <Link href="/login/github" className={cn(buttonVariants({ size: "sm" }), "gap-2")}>
-              <Github className="h-4 w-4" />
+              <Github className="size-4" />
               GitHub登录
             </Link>
           </nav>
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
+        <section className="w-full bg-muted/50 py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -80,7 +80,7 @@ export default function Home() {
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link href="/dashboard" className={cn(buttonVariants({ size: "lg" }), "gap-1")}>
                   开始使用
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="size-4" />
                 </Link>
                 <Link href="/about" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "gap-1")}>
                   了解更多
@@ -98,10 +98,10 @@ export default function Home() {
                   全方位的实验室数字化管理解决方案
                 </p>
               </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 max-w-5xl">
+              <div className="grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                 <Card>
                   <CardHeader className="flex flex-row items-center gap-2">
-                    <BookOpen className="h-6 w-6" />
+                    <BookOpen className="size-6" />
                     <div>
                       <CardTitle>学习路径系统</CardTitle>
                       <CardDescription>从入门到精通的分阶段学习指导</CardDescription>
@@ -112,13 +112,13 @@ export default function Home() {
                   </CardContent>
                   <CardFooter>
                     <Link href="/learning" className="text-sm text-primary hover:underline">
-                      了解更多 <ChevronRight className="inline h-4 w-4" />
+                      了解更多 <ChevronRight className="inline size-4" />
                     </Link>
                   </CardFooter>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center gap-2">
-                    <Package className="h-6 w-6" />
+                    <Package className="size-6" />
                     <div>
                       <CardTitle>物品管理系统</CardTitle>
                       <CardDescription>集成NFC技术，扫一扫即可借还</CardDescription>
@@ -129,13 +129,13 @@ export default function Home() {
                   </CardContent>
                   <CardFooter>
                     <Link href="/inventory" className="text-sm text-primary hover:underline">
-                      了解更多 <ChevronRight className="inline h-4 w-4" />
+                      了解更多 <ChevronRight className="inline size-4" />
                     </Link>
                   </CardFooter>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center gap-2">
-                    <FileText className="h-6 w-6" />
+                    <FileText className="size-6" />
                     <div>
                       <CardTitle>文档管理系统</CardTitle>
                       <CardDescription>告别U盘传递文件的时代</CardDescription>
@@ -146,13 +146,13 @@ export default function Home() {
                   </CardContent>
                   <CardFooter>
                     <Link href="/documents" className="text-sm text-primary hover:underline">
-                      了解更多 <ChevronRight className="inline h-4 w-4" />
+                      了解更多 <ChevronRight className="inline size-4" />
                     </Link>
                   </CardFooter>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center gap-2">
-                    <Folder className="h-6 w-6" />
+                    <Folder className="size-6" />
                     <div>
                       <CardTitle>项目管理系统</CardTitle>
                       <CardDescription>任务分配一目了然</CardDescription>
@@ -163,13 +163,13 @@ export default function Home() {
                   </CardContent>
                   <CardFooter>
                     <Link href="/projects" className="text-sm text-primary hover:underline">
-                      了解更多 <ChevronRight className="inline h-4 w-4" />
+                      了解更多 <ChevronRight className="inline size-4" />
                     </Link>
                   </CardFooter>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center gap-2">
-                    <Bot className="h-6 w-6" />
+                    <Bot className="size-6" />
                     <div>
                       <CardTitle>AI智能助手</CardTitle>
                       <CardDescription>实验室专属问答机器人</CardDescription>
@@ -180,13 +180,13 @@ export default function Home() {
                   </CardContent>
                   <CardFooter>
                     <Link href="/ai-assistant" className="text-sm text-primary hover:underline">
-                      了解更多 <ChevronRight className="inline h-4 w-4" />
+                      了解更多 <ChevronRight className="inline size-4" />
                     </Link>
                   </CardFooter>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center gap-2">
-                    <MessageSquare className="h-6 w-6" />
+                    <MessageSquare className="size-6" />
                     <div>
                       <CardTitle>社区论坛</CardTitle>
                       <CardDescription>知识分享与技术交流平台</CardDescription>
@@ -197,7 +197,7 @@ export default function Home() {
                   </CardContent>
                   <CardFooter>
                     <Link href="/community" className="text-sm text-primary hover:underline">
-                      了解更多 <ChevronRight className="inline h-4 w-4" />
+                      了解更多 <ChevronRight className="inline size-4" />
                     </Link>
                   </CardFooter>
                 </Card>
@@ -206,13 +206,14 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer className="border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+      {/* Footer */}
+      {/* <footer className="py-6 md:px-8 md:py-0">
+        <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
+          <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
             © 2024 Shadow 实验室管理系统. 保留所有权利.
           </p>
         </div>
-      </footer>
+      </footer> */}
     </div>
   )
 }

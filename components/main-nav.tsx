@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { BookOpen, FileText, Folder, Home, MessageSquare, Package } from "lucide-react"
@@ -14,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Icons } from "@/components/icons"
 
 const navItems = [
   {
@@ -48,28 +50,45 @@ const navItems = [
   },
 ]
 
-export function MainNav() {
+interface MainNavProps {
+  items?: { title: string; href?: string; disabled?: boolean }[]
+  children?: React.ReactNode
+}
+
+export function MainNav({ items, children }: MainNavProps) {
   const pathname = usePathname()
 
   return (
-    <div className="flex items-center gap-6">
-      <Link href="/" className="flex items-center gap-2 font-bold">
-        Shadow
+    <div className="flex gap-6 md:gap-10">
+      <Link href="/" className="hidden items-center space-x-2 md:flex">
+        <Icons.logo />
+        <span className="hidden font-bold sm:inline-block">
+          Shadow
+        </span>
       </Link>
-      <nav className="hidden md:flex gap-6">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-primary",
-              pathname === item.href || pathname.startsWith(`${item.href}/`) ? "text-primary" : "text-muted-foreground",
-            )}
-          >
-            {item.title}
-          </Link>
-        ))}
-      </nav>
+      {items?.length ? (
+        <nav className="hidden gap-6 md:flex">
+          {items?.map(
+            (item, index) =>
+              item.href && (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
+                    pathname?.startsWith(item.href) 
+                      ? "text-foreground"
+                      : "text-foreground/60",
+                    item.disabled && "cursor-not-allowed opacity-80"
+                  )}
+                >
+                  {item.title}
+                </Link>
+              )
+          )}
+        </nav>
+      ) : null}
+      {children}
     </div>
   )
 }
@@ -81,7 +100,7 @@ export function MobileNav() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="md:hidden">
-          <Home className="h-[1.2rem] w-[1.2rem]" />
+          <Home className="size-[1.2rem]" />
           <span className="sr-only">打开菜单</span>
         </Button>
       </DropdownMenuTrigger>
@@ -94,10 +113,10 @@ export function MobileNav() {
               href={item.href}
               className={cn(
                 "flex w-full items-center gap-2",
-                pathname === item.href || pathname.startsWith(`${item.href}/`) ? "font-medium" : "",
+                pathname === item.href || pathname?.startsWith(`${item.href}/`) ? "font-medium" : "",
               )}
             >
-              <item.icon className="h-4 w-4" />
+              <item.icon className="size-4" />
               {item.title}
             </Link>
           </DropdownMenuItem>

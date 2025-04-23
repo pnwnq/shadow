@@ -30,13 +30,13 @@ export default function InventoryPage() {
           <h1 className="text-2xl font-bold tracking-tight">物品管理</h1>
           <div className="flex items-center gap-2">
             <Button className="gap-1">
-              <Plus className="h-4 w-4" />
+              <Plus className="size-4" />
               添加物品
             </Button>
           </div>
         </div>
         <div className="flex flex-col gap-4 md:flex-row md:items-start">
-          <div className="md:w-1/4 lg:w-1/5 space-y-4">
+          <div className="space-y-4 md:w-1/4 lg:w-1/5">
             <div className="rounded-lg border p-4">
               <h2 className="mb-2 font-semibold">物品分类</h2>
               <div className="space-y-2">
@@ -75,15 +75,15 @@ export default function InventoryPage() {
               </div>
             </div>
           </div>
-          <div className="md:w-3/4 lg:w-4/5 space-y-4">
+          <div className="space-y-4 md:w-3/4 lg:w-4/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-1">
-                      <Filter className="h-4 w-4" />
+                      <Filter className="size-4" />
                       筛选
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
@@ -101,9 +101,9 @@ export default function InventoryPage() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-1">
-                      <SlidersHorizontal className="h-4 w-4" />
+                      <SlidersHorizontal className="size-4" />
                       排序
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
@@ -118,11 +118,11 @@ export default function InventoryPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" className="gap-1">
-                  <Package className="h-4 w-4" />
+                  <Package className="size-4" />
                   借用物品
                 </Button>
                 <Button variant="outline" size="sm" className="gap-1">
-                  <Package className="h-4 w-4" />
+                  <Package className="size-4" />
                   归还物品
                 </Button>
               </div>
@@ -142,7 +142,7 @@ export default function InventoryPage() {
                     </CardHeader>
                     <CardContent className="pb-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Package className="h-4 w-4" />
+                        <Package className="size-4" />
                         <span>开发板</span>
                         <Separator orientation="vertical" className="h-4" />
                         <Badge variant="outline" className="rounded-sm">
@@ -155,7 +155,7 @@ export default function InventoryPage() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
-                            <ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="size-4" />
                             <span className="sr-only">操作</span>
                           </Button>
                         </DropdownMenuTrigger>
@@ -175,7 +175,7 @@ export default function InventoryPage() {
                     </CardHeader>
                     <CardContent className="pb-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Package className="h-4 w-4" />
+                        <Package className="size-4" />
                         <span>开发板</span>
                         <Separator orientation="vertical" className="h-4" />
                         <Badge variant="secondary" className="rounded-sm">
@@ -188,7 +188,7 @@ export default function InventoryPage() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
-                            <ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="size-4" />
                             <span className="sr-only">操作</span>
                           </Button>
                         </DropdownMenuTrigger>
@@ -208,7 +208,7 @@ export default function InventoryPage() {
                     </CardHeader>
                     <CardContent className="pb-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Package className="h-4 w-4" />
+                        <Package className="size-4" />
                         <span>传感器</span>
                         <Separator orientation="vertical" className="h-4" />
                         <Badge variant="outline" className="rounded-sm">
@@ -221,7 +221,7 @@ export default function InventoryPage() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
-                            <ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="size-4" />
                             <span className="sr-only">操作</span>
                           </Button>
                         </DropdownMenuTrigger>

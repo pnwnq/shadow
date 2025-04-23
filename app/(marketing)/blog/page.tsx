@@ -1,9 +1,7 @@
-// import Image from "next/image"
 import Link from "next/link"
+import Image from "next/image"
 import { allPosts } from "@/.contentlayer/generated"
-import { compareDesc } from "date-fns"
-
-import { formatDate } from "@/lib/utils"
+import { compareDesc, format } from "date-fns"
 
 export const metadata = {
   title: "Blog",
@@ -52,7 +50,7 @@ export default async function BlogPage() {
               )}
               {post.date && (
                 <p className="text-sm text-muted-foreground">
-                  {formatDate(post.date)}
+                  {format(new Date(post.date), "PPP")}
                 </p>
               )}
               <Link href={post.slug} className="absolute inset-0">

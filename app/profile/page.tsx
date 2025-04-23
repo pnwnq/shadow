@@ -123,7 +123,7 @@ export default function ProfilePage() {
               </Badge>
             </div>
             <div className="flex flex-col items-center gap-4 md:flex-row">
-              <Avatar className="h-24 w-24">
+              <Avatar className="size-24">
                 <AvatarFallback>{currentUser.avatar}</AvatarFallback>
               </Avatar>
               <div className="space-y-2 text-center md:text-left">
@@ -196,18 +196,18 @@ export default function ProfilePage() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <Mail className="size-4 text-muted-foreground" />
                       <p className="text-sm font-medium text-muted-foreground">邮箱</p>
                       <p>{currentUser.contact.email}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <Phone className="size-4 text-muted-foreground" />
                       <p className="text-sm font-medium text-muted-foreground">电话</p>
                       <p>{currentUser.contact.phone}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <svg
-                        className="h-4 w-4 text-muted-foreground"
+                        className="size-4 text-muted-foreground"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -226,7 +226,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <svg
-                        className="h-4 w-4 text-muted-foreground"
+                        className="size-4 text-muted-foreground"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -240,7 +240,7 @@ export default function ProfilePage() {
                       <p>{currentUser.contact.qq}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Github className="h-4 w-4 text-muted-foreground" />
+                      <Github className="size-4 text-muted-foreground" />
                       <p className="text-sm font-medium text-muted-foreground">GitHub</p>
                       <Link href={`https://${currentUser.contact.github}`} className="text-primary hover:underline">
                         {currentUser.contact.github}
@@ -285,14 +285,14 @@ export default function ProfilePage() {
                           </Link>
                         </h3>
                         <p className="mt-1 text-sm text-muted-foreground">发布于 {post.date}</p>
-                        <p className="mt-2 text-sm line-clamp-2">{post.content}</p>
+                        <p className="mt-2 line-clamp-2 text-sm">{post.content}</p>
                         <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
-                            <ThumbsUp className="h-4 w-4" />
+                            <ThumbsUp className="size-4" />
                             <span>{post.likes}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <MessageSquare className="h-4 w-4" />
+                            <MessageSquare className="size-4" />
                             <span>{post.comments}</span>
                           </div>
                         </div>
@@ -346,7 +346,7 @@ export default function ProfilePage() {
                   <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                     {currentUser.friends.map((friend) => (
                       <div key={friend.id} className="flex items-center gap-3 rounded-lg border p-3">
-                        <Avatar className="h-10 w-10">
+                        <Avatar className="size-10">
                           <AvatarFallback>{friend.avatar}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
@@ -355,7 +355,7 @@ export default function ProfilePage() {
                               {friend.name}
                             </Link>
                             <span
-                              className={`flex h-2 w-2 rounded-full ${friend.online ? "bg-green-500" : "bg-red-500"}`}
+                              className={`flex size-2 rounded-full ${friend.online ? "bg-green-500" : "bg-red-500"}`}
                             ></span>
                           </div>
                           <p className="text-xs text-muted-foreground">{friend.major}</p>

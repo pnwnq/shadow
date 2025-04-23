@@ -7,9 +7,10 @@ import "@/styles/mdx.css"
 import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { format } from "date-fns"
 
 import { env } from "@/env.mjs"
-import { absoluteUrl, cn, formatDate } from "@/lib/utils"
+import { absoluteUrl, cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 
@@ -103,7 +104,7 @@ export default async function PostPage({ params }: PostPageProps) {
           "absolute left-[-200px] top-14 hidden xl:inline-flex"
         )}
       >
-        <Icons.chevronLeft className="mr-2 h-4 w-4" />
+        <Icons.chevronLeft className="mr-2 size-4" />
         See all posts
       </Link>
       <div>
@@ -112,7 +113,7 @@ export default async function PostPage({ params }: PostPageProps) {
             dateTime={post.date}
             className="block text-sm text-muted-foreground"
           >
-            Published on {formatDate(post.date)}
+            Published on {format(new Date(post.date), "PPP")}
           </time>
         )}
         <h1 className="mt-2 inline-block font-heading text-4xl leading-tight lg:text-5xl">
@@ -160,7 +161,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <hr className="mt-12" />
       <div className="flex justify-center py-6 lg:py-10">
         <Link href="/blog" className={cn(buttonVariants({ variant: "ghost" }))}>
-          <Icons.chevronLeft className="mr-2 h-4 w-4" />
+          <Icons.chevronLeft className="mr-2 size-4" />
           See all posts
         </Link>
       </div>

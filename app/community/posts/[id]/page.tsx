@@ -116,7 +116,7 @@ export default function PostDetailPage() {
             href="/community"
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="size-4" />
             返回社区
           </Link>
         </div>
@@ -126,7 +126,7 @@ export default function PostDetailPage() {
               <h1 className="text-3xl font-bold tracking-tight">{post.title}</h1>
               <div className="mt-4 flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <Avatar className="h-10 w-10">
+                  <Avatar className="size-10">
                     <AvatarFallback>{post.author.avatar}</AvatarFallback>
                   </Avatar>
                   <div>
@@ -151,15 +151,15 @@ export default function PostDetailPage() {
             />
             <div className="flex items-center gap-4">
               <Button variant={isLiked ? "default" : "outline"} size="sm" className="gap-1" onClick={handleLike}>
-                <ThumbsUp className="h-4 w-4" />
+                <ThumbsUp className="size-4" />
                 点赞 ({likeCount})
               </Button>
               <Button variant="outline" size="sm" className="gap-1" onClick={handleShare}>
-                <Share2 className="h-4 w-4" />
+                <Share2 className="size-4" />
                 分享
               </Button>
               <Button variant="outline" size="sm" className="gap-1">
-                <BookOpen className="h-4 w-4" />
+                <BookOpen className="size-4" />
                 收藏
               </Button>
             </div>
@@ -169,7 +169,7 @@ export default function PostDetailPage() {
               <div className="space-y-4">
                 {post.comments.map((comment) => (
                   <div key={comment.id} className="flex gap-3">
-                    <Avatar className="h-8 w-8">
+                    <Avatar className="size-8">
                       <AvatarFallback>{comment.author.avatar}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 space-y-1">
@@ -185,11 +185,11 @@ export default function PostDetailPage() {
                       <p className="text-sm">{comment.content}</p>
                       <div className="flex items-center gap-2">
                         <Button variant="ghost" size="sm" className="h-7 gap-1 px-2">
-                          <ThumbsUp className="h-3 w-3" />
+                          <ThumbsUp className="size-3" />
                           <span className="text-xs">{comment.likes}</span>
                         </Button>
                         <Button variant="ghost" size="sm" className="h-7 gap-1 px-2">
-                          <MessageSquare className="h-3 w-3" />
+                          <MessageSquare className="size-3" />
                           <span className="text-xs">回复</span>
                         </Button>
                       </div>

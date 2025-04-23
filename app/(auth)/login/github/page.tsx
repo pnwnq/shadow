@@ -11,8 +11,8 @@ export default function GitHubLoginPage() {
         <CardDescription>使用GitHub账号登录Shadow实验室管理系统</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center space-y-4 py-8">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-          <Github className="h-10 w-10" />
+        <div className="flex size-20 items-center justify-center rounded-full bg-muted">
+          <Github className="size-10" />
         </div>
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
@@ -23,7 +23,7 @@ export default function GitHubLoginPage() {
       <CardFooter className="flex flex-col space-y-4">
         <Button className="w-full gap-2" asChild>
           <a href="/dashboard">
-            <Github className="h-5 w-5" />
+            <Github className="size-5" />
             使用GitHub登录
           </a>
         </Button>

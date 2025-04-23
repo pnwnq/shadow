@@ -31,7 +31,7 @@ export function PostCard({ post }: PostCardProps) {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
+            <Avatar className="size-8">
               <AvatarFallback>{post.author.avatar}</AvatarFallback>
             </Avatar>
             <div>
@@ -44,7 +44,7 @@ export function PostCard({ post }: PostCardProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="size-4" />
                 <span className="sr-only">操作</span>
               </Button>
             </DropdownMenuTrigger>
@@ -62,7 +62,7 @@ export function PostCard({ post }: PostCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="pb-2">
-        <p className="text-sm text-muted-foreground line-clamp-3">{post.content}</p>
+        <p className="line-clamp-3 text-sm text-muted-foreground">{post.content}</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {post.tags.map((tag) => (
             <Badge key={tag} variant="secondary" className="rounded-full">
@@ -74,15 +74,15 @@ export function PostCard({ post }: PostCardProps) {
       <CardFooter className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
-            <ThumbsUp className="h-4 w-4" />
+            <ThumbsUp className="size-4" />
             <span>{post.likes}</span>
           </div>
           <div className="flex items-center gap-1">
-            <MessageSquare className="h-4 w-4" />
+            <MessageSquare className="size-4" />
             <span>{post.comments}</span>
           </div>
           <div className="flex items-center gap-1">
-            <BookOpen className="h-4 w-4" />
+            <BookOpen className="size-4" />
             <span>{post.views}</span>
           </div>
         </div>
