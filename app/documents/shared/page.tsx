@@ -133,7 +133,7 @@ export default function SharedDocumentsPage() {
 
   const activeDocuments = activeTab === "shared-with-me" ? sharedWithMeDocuments : sharedByMeDocuments
 
-  const filteredDocuments = activeDocuments.filter(doc =>
+  const filteredDocuments = activeDocuments.filter((doc) =>
     doc.title.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -368,4 +368,101 @@ export default function SharedDocumentsPage() {
         </div>
       ) : (
         <div className="rounded-md border">
-          <div className="grid grid-cols-12 gap-2 p-\
+          <div className="grid grid-cols-12 gap-2 p-4">
+            {filteredDocuments.map((doc) => (
+              <div key={doc.id} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">{doc.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pb-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                      <FileText className="h-4 w-4" />
+                      <span>
+                        {doc.type} · {doc.size}
+                      </span>
+                    </div>
+                    
+                    {activeTab === "shared-with-me" && "sharedBy" in doc && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <span className="text-muted-foreground">共享者：</span>
+                        <div className="flex items-center gap-1">
+                          <Avatar className="h-5 w-5">
+                            <AvatarImage src={doc.sharedBy.avatar || "/placeholder.svg"} alt={doc.sharedBy.name} />
+                            <AvatarFallback>{doc.sharedBy.name[0]}</AvatarFallback>
+                          </Avatar>
+                          <span>{doc.sharedBy.name}</span>
+                        </div>
+                        <Badge variant={doc.permission === "edit" ? "default" : "outline"} className="ml-auto">
+                          {doc.permission === "view" ? "只读" : doc.permission === "edit" ? "可编辑" : "可评论"}
+                        </Badge>
+                      </div>
+                    )}
+                    
+                    {activeTab === "shared-by-me" && "sharedWith" in doc && (
+                      <div className="flex flex-col gap-1 text-sm">
+                        <span className="text-muted-foreground">共享给：</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {doc.sharedWith.map((recipient, idx) => (
+                            <Badge key={idx} variant="outline" className="flex items-center gap-1">
+                              {recipient.type === "group" ? (
+                                <Users className="h-3 w-3" />
+                              ) : (
+                                <Avatar className="h-4 w-4">
+                                  <AvatarFallback className="text-[10px]">{recipient.name[0]}</AvatarFallback>
+                                </Avatar>
+                              )}
+                              {recipient.name}
+                              {recipient.type === "group" && recipient.count && (
+                                <span className="text-xs">({recipient.count})</span>
+                              )}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                  <CardFooter className="flex justify-between pt-2">
+                    <span className="text-xs text-muted-foreground">共享于 {doc.sharedDate}</span>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <ChevronDown className="h-4 w-4" />
+                          <span className="sr-only">操作</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link href={`/documents/${doc.id}`}>查看</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>下载</DropdownMenuItem>
+                        {activeTab === "shared-with-me" ? (
+                          <>
+                            {"permission" in doc && doc.permission === "edit" && (
+                              <DropdownMenuItem>编辑</DropdownMenuItem>
+                            )}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive">取消共享</DropdownMenuItem>
+                          </>
+                        ) : (
+                          <>
+                            <DropdownMenuItem>
+                              <Share2 className="mr-2 h-4 w-4" />
+                              管理共享
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive">停止共享</DropdownMenuItem>
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </CardFooter>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
