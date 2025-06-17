@@ -1,0 +1,19 @@
+/* 为导航栏添加样式 */
+.global-nav-container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .global-nav-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .global-nav-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
