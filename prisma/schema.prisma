@@ -30,6 +30,10 @@ model User {
   sessions      Session[]
   documents     Document[]
   logs          AuditLog[]
+  posts         CommunityPost[]
+  comments      CommunityComment[]
+  votes         CommunityPostVote[]
+  notifications Notification[]
 }
 
 model Account {
@@ -125,4 +129,75 @@ model SystemSetting {
   value       String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// Community Feature Models
+model CommunityCategory {
+  id          String            @id @default(cuid())
+  name        String            @unique
+  description String?
+  posts       CommunityPost[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+enum CommunityPostType {
+  BLOG
+  QUESTION
+  DISCUSSION
+}
+
+model CommunityPost {
+  id         String             @id @default(cuid())
+  title      String
+  content    String?            @db.Text
+  type       CommunityPostType  @default(BLOG)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  author     User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String
+  category   CommunityCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?
+  comments   CommunityComment[]
+  votes      CommunityPostVote[]
+  viewCount  Int                @default(0)
+}
+
+model CommunityComment {
+  id        String        @id @default(cuid())
+  content   String        @db.Text
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+}
+
+model CommunityPostVote {
+  id     String   @id @default(cuid())
+  type   VoteType
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  post   CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  @@unique([userId, postId])
+}
+
+enum VoteType {
+  UP
+  DOWN
+}
+
+// End of Community Feature Models
+
+model Notification {
+  id        String   @id @default(cuid())
+  recipient User     @relation(fields: [recipientId], references: [id])
+  recipientId String
+  payload   Json
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

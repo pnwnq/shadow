@@ -8,6 +8,7 @@ async function main() {
 
   // Clean up existing data
   await prisma.user.deleteMany({});
+  await prisma.communityCategory.deleteMany({});
   // Add other model cleanups if necessary, e.g., await prisma.account.deleteMany({});
 
   console.log("Old data cleaned up.");
@@ -52,6 +53,17 @@ async function main() {
     },
   });
   console.log("Created Normal Member (user@example.com)");
+
+  // 4. Create Community Categories
+  await prisma.communityCategory.createMany({
+    data: [
+      { name: '技术问答', description: '关于编程、硬件、软件等技术问题的讨论区。' },
+      { name: '资源分享', description: '分享有用的文章、工具、数据集、学习资源等。' },
+      { name: '项目展示', description: '展示你的个人项目、课程设计、竞赛作品等。' },
+      { name: '日常吹水', description: '轻松愉快地聊聊学习、生活、兴趣爱好。' },
+    ],
+  });
+  console.log("Created community categories.");
 
   console.log("Seeding finished.");
 }

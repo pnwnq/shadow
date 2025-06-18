@@ -18,3 +18,8 @@ alwaysApply: false
 前端处理API数据时，必须完整地处理“加载中(loading)”、“成功(success)”和“失败(error)”这三种状态。
 识别问题类型——是“代码逻辑”还是“环境问题”？
 如果一个问题（尤其是类型错误）在逻辑上看起来不可能发生，并且在多次尝试直接修复后依然存在，那它很可能是一个环境问题。此时应该果断放弃“死磕”，转向“绕行”。
+
+数据库是这样的：
+模型是 User：数据库中代表用户的模型确实是 User。
+四级角色：Role 枚举（enum）中清晰地定义了四级角色：SUPER_ADMIN, ADMIN, MEMBER, COMPETITION_ACCOUNTANT。
+

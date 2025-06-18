@@ -1,16 +1,21 @@
 import { Search } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 import { Input } from "@/components/ui/input"
-import { MainNav, MobileNav } from "@/components/main-nav"
+import { MainNav } from "@/components/main-nav"
+import { MobileNav } from "@/components/mobile-nav"
 import { UserNav } from "@/components/user-nav"
 
 export function SiteHeader() {
+  const { data: session } = useSession()
+  const userRole = session?.user?.role
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
       <div className="container flex h-16 items-center justify-between py-4">
         <div className="flex items-center gap-6">
           <MobileNav />
-          <MainNav />
+          <MainNav userRole={userRole} />
         </div>
         <div className="flex items-center gap-4">
           <div className="relative hidden md:flex">

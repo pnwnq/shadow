@@ -12,7 +12,7 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.3))(typescript@5.8.3))
       '@hookform/resolvers':
-        specifier: ^3.9.1
+        specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.58.1(react@19.1.0))
       '@novu/node':
         specifier: ^2.6.6
@@ -104,6 +104,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: 1.1.6
         version: 1.1.6(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@tanstack/react-query':
+        specifier: ^5.80.7
+        version: 5.80.7(react@19.1.0)
       '@uppy/core':
         specifier: ^4.4.6
         version: 4.4.6
@@ -143,6 +146,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.21(postcss@8.5.6)
+      axios:
+        specifier: ^1.10.0
+        version: 1.10.0
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
@@ -195,7 +201,7 @@ importers:
         specifier: latest
         version: 14.3.8(react@19.1.0)
       react-hook-form:
-        specifier: ^7.54.1
+        specifier: ^7.58.1
         version: 7.58.1(react@19.1.0)
       react-pdf:
         specifier: ^9.2.1
@@ -225,7 +231,7 @@ importers:
         specifier: ^0.1.12
         version: 0.1.12
       zod:
-        specifier: ^3.24.1
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@types/bcryptjs':
@@ -1656,6 +1662,9 @@ packages:
   '@tanstack/query-core@4.40.0':
     resolution: {integrity: sha512-7MJTtZkCSuehMC7IxMOCGsLvHS3jHx4WjveSrGsG1Nc1UQLjaFwwkpLA2LmPfvOAxnH4mszMOBFD6LlZE+aB+Q==}
 
+  '@tanstack/query-core@5.80.7':
+    resolution: {integrity: sha512-s09l5zeUKC8q7DCCCIkVSns8zZrK4ZDT6ryEjxNBFi68G4z2EBobBS7rdOY3r6W1WbUDpc1fe5oY+YO/+2UVUg==}
+
   '@tanstack/react-query@4.40.0':
     resolution: {integrity: sha512-kt1G/wETT/Ad79cac5zJ8tyaMOm4rgyeomW5yDxgOO9qEhOwufgw9kgPpp+T9U0M0lL7EMoc6YXgv4gYhXu9tg==}
     peerDependencies:
@@ -1667,6 +1676,11 @@ packages:
         optional: true
       react-native:
         optional: true
+
+  '@tanstack/react-query@5.80.7':
+    resolution: {integrity: sha512-u2F0VK6+anItoEvB3+rfvTO9GEh2vb00Je05OwlUe/A0lkJBgW1HckiY3f9YZa+jx6IOe4dHPh10dyp9aY3iRQ==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@transloadit/prettier-bytes@0.3.5':
     resolution: {integrity: sha512-xF4A3d/ZyX2LJWeQZREZQw+qFX4TGQ8bGVP97OLRt6sPO6T0TNHBFTuRHOJh7RNmYOBmQ9MHxpolD9bXihpuVA==}
@@ -4929,6 +4943,8 @@ snapshots:
 
   '@tanstack/query-core@4.40.0': {}
 
+  '@tanstack/query-core@5.80.7': {}
+
   '@tanstack/react-query@4.40.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@tanstack/query-core': 4.40.0
@@ -4936,6 +4952,11 @@ snapshots:
       use-sync-external-store: 1.5.0(react@19.1.0)
     optionalDependencies:
       react-dom: 19.1.0(react@19.1.0)
+
+  '@tanstack/react-query@5.80.7(react@19.1.0)':
+    dependencies:
+      '@tanstack/query-core': 5.80.7
+      react: 19.1.0
 
   '@transloadit/prettier-bytes@0.3.5': {}
 

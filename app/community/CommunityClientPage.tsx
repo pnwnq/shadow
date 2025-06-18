@@ -5,6 +5,13 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { Search, Filter, Plus, MessageSquare, ThumbsUp, Eye, Users, MessageCircle, Bell } from "lucide-react"
+import {
+  CommunityPost,
+  CommunityCategory,
+  CommunityPostVote,
+  User,
+  CommunityComment,
+} from "@prisma/client"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,85 +20,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
-// 模拟数据 - 帖子
-const posts = [
-  {
-    id: "1",
-    title: "2024年全国大学生机器人大赛报名通知",
-    content: "2024年全国大学生机器人大赛将于6月在北京举行，我校将组织队伍参加。有意向的同学请在5月15日前报名...",
-    author: {
-      name: "张教授",
-      avatar: "ZP",
-    },
-    category: "通知",
-    tags: ["比赛", "机器人", "报名"],
-    likes: 24,
-    views: 156,
-    comments: 8,
-    createdAt: "2024-04-28",
-    isPinned: true,
-  },
-  {
-    id: "2",
-    title: "分享：视觉SLAM在机器人导航中的应用",
-    content: "最近在项目中使用了视觉SLAM技术，效果不错。这里分享一下我们的实现方法和一些优化技巧...",
-    author: {
-      name: "李明",
-      avatar: "LM",
-    },
-    category: "技术分享",
-    tags: ["SLAM", "计算机视觉", "导航"],
-    likes: 42,
-    views: 231,
-    comments: 15,
-    createdAt: "2024-04-25",
-  },
-  {
-    id: "3",
-    title: "请教：关于机械臂控制精度问题",
-    content: "我们团队在开发一个高精度机械臂，但在实际测试中发现精度误差较大。有没有经验丰富的同学可以给些建议？",
-    author: {
-      name: "王小明",
-      avatar: "WXM",
-    },
-    category: "问答",
-    tags: ["机械臂", "控制", "精度"],
-    likes: 12,
-    views: 98,
-    comments: 7,
-    createdAt: "2024-04-23",
-  },
-  {
-    id: "4",
-    title: "实验室新购入的激光雷达使用指南",
-    content: "实验室最近购入了新型号的激光雷达，这里整理了一份详细的使用指南和注意事项，供大家参考...",
-    author: {
-      name: "赵工",
-      avatar: "ZG",
-    },
-    category: "资源",
-    tags: ["激光雷达", "设备", "教程"],
-    likes: 35,
-    views: 187,
-    comments: 5,
-    createdAt: "2024-04-20",
-  },
-  {
-    id: "5",
-    title: "分享几个好用的ROS开发工具",
-    content: "在ROS开发中，有一些工具可以大大提高效率。这里分享几个我常用的工具和插件，希望对大家有帮助...",
-    author: {
-      name: "陈华",
-      avatar: "CH",
-    },
-    category: "技术分享",
-    tags: ["ROS", "开发工具", "效率"],
-    likes: 56,
-    views: 312,
-    comments: 23,
-    createdAt: "2024-04-18",
-  },
-]
+type ExtendedPost = CommunityPost & {
+  category: CommunityCategory | null
+  votes: CommunityPostVote[]
+  author: User
+  comments: CommunityComment[]
+}
+
+interface CommunityClientPageProps {
+  initialPosts: ExtendedPost[]
+}
 
 // 模拟数据 - 热门标签
 const popularTags = [
@@ -116,7 +54,10 @@ const activeUsers = [
   { name: "王小明", avatar: "WXM", posts: 10, role: "研究生" },
 ]
 
-export default function CommunityClientPage() {
+export default function CommunityClientPage({
+  initialPosts,
+}: CommunityClientPageProps) {
+  const [posts, setPosts] = useState(initialPosts)
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("all")
   const router = useRouter()
@@ -127,25 +68,23 @@ export default function CommunityClientPage() {
 
   // 过滤帖子
   const filteredPosts = posts.filter((post) => {
-    // 根据搜索词过滤
     if (
       searchQuery &&
       !post.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !post.content.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !post.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      post.content &&
+      !post.content.toLowerCase().includes(searchQuery.toLowerCase())
     ) {
       return false
     }
 
-    // 根据标签过滤
     if (activeTab !== "all" && activeTab !== "pinned") {
-      return post.category.toLowerCase() === activeTab.toLowerCase()
+      // @ts-ignore
+      return post.category?.name.toLowerCase() === activeTab.toLowerCase()
     }
 
-    // 置顶帖子过滤
-    if (activeTab === "pinned") {
-      return post.isPinned
-    }
+    // if (activeTab === "pinned") { // 'isPinned' is not in the model yet
+    //   return post.isPinned
+    // }
 
     return true
   })
@@ -308,57 +247,50 @@ export default function CommunityClientPage() {
   )
 }
 
-function PostCard({ post }: { post: any }) {
+function PostCard({ post }: { post: ExtendedPost }) {
+  const router = useRouter()
+  const upVotes = post.votes.filter((vote) => vote.type === "UP").length
+  const downVotes = post.votes.filter((vote) => vote.type === "DOWN").length
+  const voteCount = upVotes - downVotes
+
   return (
-    <Card>
+    <Card
+      className="cursor-pointer transition-shadow hover:shadow-md"
+      onClick={() => router.push(`/community/posts/${post.id}`)}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarFallback>{post.author.avatar}</AvatarFallback>
-            </Avatar>
-            <span className="text-sm font-medium">{post.author.name}</span>
-            <span className="text-xs text-muted-foreground">发布于 {post.createdAt}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline">{post.category}</Badge>
-            {post.isPinned && <Badge variant="secondary">置顶</Badge>}
-          </div>
+          <Badge variant="secondary">{post.category?.name || "无分类"}</Badge>
+          {/* Add pin logic later */}
         </div>
-        <CardTitle className="mt-2">
-          <Link href={`/community/posts/${post.id}`} className="hover:underline">
-            {post.title}
-          </Link>
-        </CardTitle>
-        <CardDescription className="line-clamp-2">{post.content}</CardDescription>
+        <CardTitle className="mt-2 text-xl">{post.title}</CardTitle>
+        <CardDescription className="line-clamp-2">
+          {post.content?.substring(0, 200) || "没有内容..."}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
-          {post.tags.map((tag: string) => (
-            <Badge key={tag} variant="outline">
-              {tag}
-            </Badge>
-          ))}
+      <CardFooter className="flex items-center justify-between text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <Avatar className="h-6 w-6">
+            <AvatarFallback>{post.author.name?.[0] || "U"}</AvatarFallback>
+          </Avatar>
+          <span>{post.author.name}</span>
+          <span>·</span>
+          <span>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between border-t p-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
-            <ThumbsUp className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{post.likes}</span>
+            <ThumbsUp className="h-4 w-4" />
+            <span>{voteCount}</span>
           </div>
           <div className="flex items-center gap-1">
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{post.comments}</span>
+            <MessageSquare className="h-4 w-4" />
+            <span>{post.comments.length}</span>
           </div>
           <div className="flex items-center gap-1">
-            <Eye className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{post.views}</span>
+            <Eye className="h-4 w-4" />
+            <span>{post.viewCount}</span>
           </div>
         </div>
-        <Button variant="ghost" size="sm" asChild>
-          <Link href={`/community/posts/${post.id}`}>阅读全文</Link>
-        </Button>
       </CardFooter>
     </Card>
   )
