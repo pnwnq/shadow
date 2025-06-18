@@ -1,105 +1,62 @@
 "use client"
 
-import type React from "react"
+import { useChat } from 'ai/react';
+import { nanoid } from 'nanoid';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import { Bot, User, Send, Loader2 } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRef, useEffect, useState, useCallback } from 'react';
+import type { Message } from 'ai';
 
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Send, Bot, User, Loader2 } from "lucide-react"
-
-interface Message {
-  id: string
-  content: string
-  role: "user" | "assistant"
-  timestamp: Date
-}
+const INITIAL_MESSAGES: Message[] = [
+  {
+    id: nanoid(),
+    role: 'assistant',
+    content: '你好！我是Shadow实验室智能助手。我可以帮你查找实验室信息、设备使用指南、项目资料等。有什么问题吗？'
+  }
+];
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      content: "你好！我是Shadow实验室智能助手。我可以帮你查找实验室信息、设备使用指南、项目资料等。有什么问题吗？",
-      role: "assistant",
-      timestamp: new Date(),
-    },
-  ])
-  const [input, setInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const { messages, append, isLoading, input, setInput } =
+    useChat({
+      api: '/api/ai/chat',
+      initialMessages: INITIAL_MESSAGES,
+      onResponse: useCallback((response: Response) => {
+        if (!response.ok) {
+          toast.error(response.statusText);
+        }
+      }, []),
+    });
 
-  const scrollToBottom = () => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
-    }
-  }
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: input,
-      role: "user",
-      timestamp: new Date(),
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
+  }, [messages]);
 
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-    setIsLoading(true)
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    append({ role: 'user', content: input });
+    setInput('');
+  };
 
-    try {
-      const response = await fetch("/api/ai/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: input,
-          history: messages.slice(-10), // 只发送最近10条消息作为上下文
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to get response")
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const form = e.currentTarget.form;
+      if (form) {
+        form.requestSubmit();
       }
-
-      const data = await response.json()
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: data.response,
-        role: "assistant",
-        timestamp: new Date(),
-      }
-
-      setMessages((prev) => [...prev, assistantMessage])
-    } catch (error) {
-      console.error("Error sending message:", error)
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: "抱歉，我现在无法回答您的问题。请稍后再试。",
-        role: "assistant",
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, errorMessage])
-    } finally {
-      setIsLoading(false)
     }
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
-    }
-  }
+  };
 
   return (
     <Card className="h-[600px] flex flex-col">
@@ -115,7 +72,10 @@ export default function ChatInterface() {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                className={cn(
+                  "flex gap-3 text-sm",
+                  message.role === "user" ? "justify-end" : "justify-start"
+                )}
               >
                 {message.role === "assistant" && (
                   <Avatar className="h-8 w-8">
@@ -125,12 +85,12 @@ export default function ChatInterface() {
                   </Avatar>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={cn(
+                    "max-w-[80%] rounded-lg p-3",
                     message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                  }`}
+                  )}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                  <p className="text-xs opacity-70 mt-1">{message.timestamp.toLocaleTimeString()}</p>
+                  <p className="whitespace-pre-wrap">{message.content}</p>
                 </div>
                 {message.role === "user" && (
                   <Avatar className="h-8 w-8">
@@ -142,7 +102,7 @@ export default function ChatInterface() {
               </div>
             ))}
             {isLoading && (
-              <div className="flex gap-3 justify-start">
+              <div className="flex gap-3 justify-start text-sm">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>
                     <Bot className="h-4 w-4" />
@@ -151,7 +111,7 @@ export default function ChatInterface() {
                 <div className="bg-muted rounded-lg p-3">
                   <div className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">正在思考...</span>
+                    <span>正在思考...</span>
                   </div>
                 </div>
               </div>
@@ -159,21 +119,24 @@ export default function ChatInterface() {
           </div>
         </ScrollArea>
         <div className="p-4 border-t">
-          <div className="flex gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="flex gap-2"
+          >
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="输入您的问题..."
               disabled={isLoading}
               className="flex-1"
             />
-            <Button onClick={handleSend} disabled={isLoading || !input.trim()}>
+            <Button type="submit" disabled={isLoading || !input.trim()}>
               <Send className="h-4 w-4" />
             </Button>
-          </div>
+          </form>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
