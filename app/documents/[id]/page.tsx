@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ArrowDown, Download, FileText, MessageSquare, Share2, Star, ThumbsUp, Loader2 } from "lucide-react"
+import { ArrowDown, Download, FileText, MessageSquare, Share2, Star, ThumbsUp, Loader2, Trash2 } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -33,7 +33,7 @@ interface Document {
   tags: string[];
   isTemplate: boolean;
   createdAt: string | Date;
-  updatedAt:string | Date;
+  updatedAt: string | Date;
   uploaderId: string;
 }
 
@@ -49,9 +49,10 @@ export default function DocumentDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { toast } = useToast()
-  
+
   const [document, setDocument] = useState<DocumentDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [comment, setComment] = useState("")
@@ -85,6 +86,40 @@ export default function DocumentDetailPage() {
     fetchDocument()
   }, [docId])
 
+  const handleDelete = async () => {
+    if (!document) return;
+
+    const confirmed = window.confirm(`您确定要删除文件 "${document.name}" 吗？此操作无法撤销。`);
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/documents/${document.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('删除失败');
+      }
+
+      toast({
+        title: "删除成功",
+        description: `文件 "${document.name}" 已被删除。`,
+      });
+      router.push('/documents');
+      router.refresh(); // To ensure the list is updated
+    } catch (err: any) {
+      toast({
+        title: "删除失败",
+        description: err.message || "无法删除此文件，请稍后再试。",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleDownload = () => {
     if (!document?.url) return;
@@ -140,7 +175,7 @@ export default function DocumentDetailPage() {
   }
 
   if (error) {
-     return (
+    return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-destructive">加载失败</h2>
@@ -167,13 +202,13 @@ export default function DocumentDetailPage() {
       </div>
     )
   }
-  
-  const formattedDate = new Intl.DateTimeFormat('zh-CN', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+
+  const formattedDate = new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   }).format(new Date(document.createdAt));
-  
+
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes"
     const k = 1024
@@ -185,28 +220,6 @@ export default function DocumentDetailPage() {
 
   return (
     <div className="space-y-6 p-4 md:p-8">
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">首页</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/documents">文档管理</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          {/* Category can be added later if needed */}
-          {/* <BreadcrumbItem>
-            <BreadcrumbLink href={`/documents/categories/${document.category}`}>
-              {document.category}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator /> */}
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/documents/${document.id}`}>{document.name}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
 
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
@@ -233,6 +246,10 @@ export default function DocumentDetailPage() {
             <Download className="h-4 w-4" />
             下载
           </Button>
+          <Button variant="destructive" size="sm" className="gap-1" onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+            {isDeleting ? "删除中..." : "删除"}
+          </Button>
         </div>
       </div>
 
@@ -244,7 +261,7 @@ export default function DocumentDetailPage() {
             <TabsTrigger value="history">历史版本</TabsTrigger>
             <TabsTrigger value="ai-qa">AI问答</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="preview">
             <DocumentPreview fileUrl={document.url} fileType={document.type} />
           </TabsContent>

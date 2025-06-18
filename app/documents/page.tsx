@@ -316,7 +316,9 @@ export default function DocumentsPage() {
                         <CardTitle className="text-base truncate leading-snug" title={file.title}>
                           <Link href={`/documents/${file.id}`}>{file.title}</Link>
                         </CardTitle>
-                        <p className="text-sm text-muted-foreground">{file.type}</p>
+                        <p className="text-sm text-muted-foreground truncate" title={file.description ?? ''}>
+                          {file.description || "暂无描述"}
+                        </p>
                       </CardContent>
                       <CardFooter className="text-xs text-muted-foreground justify-between">
                         <span>{formatFileSize(file.size)}</span>
