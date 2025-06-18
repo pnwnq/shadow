@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   Card,
@@ -29,28 +29,11 @@ import {
   UserPlus,
   PlusCircle,
 } from 'lucide-react';
+import { User } from '@prisma/client';
 
 interface HomeClientProps {
-  user: any;
+  user: User;
 }
-
-// New component to safely render remaining days on the client
-const RemainingDays = ({ deadline }: { deadline: string }) => {
-  const [days, setDays] = useState<number | null>(null);
-
-  useEffect(() => {
-    const calculatedDays = Math.ceil(
-      (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-    );
-    setDays(calculatedDays);
-  }, [deadline]);
-
-  if (days === null) {
-    return <span>计算中...</span>;
-  }
-
-  return <span>{days} 天</span>;
-};
 
 export function HomeClient({ user }: HomeClientProps) {
   // 模拟数据，因为这些模块还没开发
@@ -210,7 +193,13 @@ export function HomeClient({ user }: HomeClientProps) {
                         <div className="flex justify-between text-xs text-muted-foreground">
                           <span>进度: {project.progress}%</span>
                           <span>
-                            剩余时间: <RemainingDays deadline={project.deadline} />
+                            剩余时间:{' '}
+                            {Math.ceil(
+                              (new Date(project.deadline).getTime() -
+                                Date.now()) /
+                              (1000 * 60 * 60 * 24)
+                            )}{' '}
+                            天
                           </span>
                         </div>
                       </div>
