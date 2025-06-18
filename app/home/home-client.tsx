@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Card,
@@ -29,28 +29,45 @@ import {
   UserPlus,
   PlusCircle,
 } from 'lucide-react';
-import { User } from '@prisma/client';
 
 interface HomeClientProps {
-  user: User;
+  user: any;
 }
+
+// New component to safely render remaining days on the client
+const RemainingDays = ({ deadline }: { deadline: string }) => {
+  const [days, setDays] = useState<number | null>(null);
+
+  useEffect(() => {
+    const calculatedDays = Math.ceil(
+      (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    );
+    setDays(calculatedDays);
+  }, [deadline]);
+
+  if (days === null) {
+    return <span>计算中...</span>;
+  }
+
+  return <span>{days} 天</span>;
+};
 
 export function HomeClient({ user }: HomeClientProps) {
   // 模拟数据，因为这些模块还没开发
-   const mockProjects = [
-      { name: "智能机器人研究", deadline: "2024-12-15", progress: 65 },
-      { name: "数据分析竞赛", deadline: "2024-11-30", progress: 40 },
-    ]
-   const mockNotifications =  [
-      { title: "项目截止日期提醒", time: "1小时前", icon: <Calendar className="h-4 w-4" /> },
-      { title: "新文档已分享给您", time: "3小时前", icon: <FileText className="h-4 w-4" /> },
-      { title: "实验室会议安排", time: "昨天", icon: <Users className="h-4 w-4" /> },
-    ]
-   const mockCourses = [
-      { name: "人工智能基础", progress: 75, icon: <Bot className="h-4 w-4" /> },
-      { name: "机器学习算法", progress: 45, icon: <Rocket className="h-4 w-4" /> },
-      { name: "深度学习应用", progress: 20, icon: <Beaker className="h-4 w-4" /> },
-    ]
+  const mockProjects = [
+    { name: "智能机器人研究", deadline: "2024-12-15", progress: 65 },
+    { name: "数据分析竞赛", deadline: "2024-11-30", progress: 40 },
+  ]
+  const mockNotifications = [
+    { title: "项目截止日期提醒", time: "1小时前", icon: <Calendar className="h-4 w-4" /> },
+    { title: "新文档已分享给您", time: "3小时前", icon: <FileText className="h-4 w-4" /> },
+    { title: "实验室会议安排", time: "昨天", icon: <Users className="h-4 w-4" /> },
+  ]
+  const mockCourses = [
+    { name: "人工智能基础", progress: 75, icon: <Bot className="h-4 w-4" /> },
+    { name: "机器学习算法", progress: 45, icon: <Rocket className="h-4 w-4" /> },
+    { name: "深度学习应用", progress: 20, icon: <Beaker className="h-4 w-4" /> },
+  ]
 
 
   return (
@@ -193,13 +210,7 @@ export function HomeClient({ user }: HomeClientProps) {
                         <div className="flex justify-between text-xs text-muted-foreground">
                           <span>进度: {project.progress}%</span>
                           <span>
-                            剩余时间:{' '}
-                            {Math.ceil(
-                              (new Date(project.deadline).getTime() -
-                                Date.now()) /
-                                (1000 * 60 * 60 * 24)
-                            )}{' '}
-                            天
+                            剩余时间: <RemainingDays deadline={project.deadline} />
                           </span>
                         </div>
                       </div>
@@ -217,7 +228,7 @@ export function HomeClient({ user }: HomeClientProps) {
           </div>
           <div>
             <Card>
-               <CardHeader>
+              <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle>通知</CardTitle>
@@ -289,7 +300,7 @@ export function HomeClient({ user }: HomeClientProps) {
                           预计完成时间:{' '}
                           {new Date(
                             Date.now() +
-                              (100 - course.progress) * 24 * 60 * 60 * 1000
+                            (100 - course.progress) * 24 * 60 * 60 * 1000
                           ).toLocaleDateString()}
                         </span>
                       </div>

@@ -106,17 +106,21 @@ enum LogLevel {
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  timestamp DateTime @default(now())
-  level     LogLevel
-  action    String
-  message   String
-  ipAddress String?
-  
-  userId    String?
-  user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id         String   @id @default(cuid())
+  action     String
+  entityType String
+  entityId   String
+  ip         String?
+  type       String?
+  level      String?
+  timestamp  DateTime @default(now())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
 
-  @@index([userId])
-  @@index([level])
-  @@index([action])
+model SystemSetting {
+  key         String @id
+  value       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

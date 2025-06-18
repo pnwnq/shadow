@@ -37,15 +37,11 @@ import {
       PaginationPrevious,
 } from "@/components/ui/pagination"
 import { RoleBadge } from "@/components/role-badge"
-import { User, Role } from "@prisma/client"
 import { useDebounce } from "use-debounce"
-
-// Define a type for the user data we expect from the API
-type UserWithRole = User & { role: Role }
 
 export function UsersTable() {
       const { toast } = useToast()
-      const [users, setUsers] = useState<UserWithRole[]>([])
+      const [users, setUsers] = useState<any[]>([])
       const [isLoading, setIsLoading] = useState(true)
       const [searchQuery, setSearchQuery] = useState("")
       const [debouncedSearchQuery] = useDebounce(searchQuery, 500)
@@ -70,9 +66,9 @@ export function UsersTable() {
                   }
 
                   const data = await response.json()
-                  setUsers(data.users)
-                  setTotalPages(data.totalPages)
-                  setTotalUsers(data.totalUsers)
+                  setUsers(data.data)
+                  setTotalPages(data.pagination.totalPages)
+                  setTotalUsers(data.pagination.total)
             } catch (error) {
                   toast({
                         title: "Error",

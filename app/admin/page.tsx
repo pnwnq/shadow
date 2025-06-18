@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import {
   BarChart3,
@@ -25,12 +25,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
-import { useEffect, useState as useReactState } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { UsersTable } from "./components/users-table"
+import LogsTable from "./components/logs-table"
+import { SecuritySettings } from "./components/security-settings"
+import { GeneralSettings } from "./components/general-settings"
+
+interface DashboardData {
+  totalUsers: number;
+  activeUsers: number;
+  roleDistribution: { role: string; count: number }[];
+  systemLoad: number;
+  storageUsage: number;
+}
+
+const roleDisplayName: { [key: string]: string } = {
+  SUPER_ADMIN: "超级管理员",
+  ADMIN: "管理员",
+  MEMBER: "实验室成员",
+  COMPETITION_ACCOUNTANT: "财务管理员",
+};
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard")
-  const [currentRole, setCurrentRole] = useReactState<string>("lab_member")
+  const [currentRole, setCurrentRole] = useState<string>("lab_member")
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const savedRole = localStorage.getItem("currentUserRole")
@@ -38,6 +58,25 @@ export default function AdminPage() {
       setCurrentRole(savedRole)
     }
   }, [])
+
+  useEffect(() => {
+    if (activeTab === 'dashboard' && !dashboardData) {
+      const fetchData = async () => {
+        setIsLoading(true);
+        try {
+          const response = await fetch('/api/admin/dashboard');
+          if (!response.ok) throw new Error("Failed to fetch dashboard data");
+          const data = await response.json();
+          setDashboardData(data);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchData();
+    }
+  }, [activeTab, dashboardData]);
 
   return (
     <div className="space-y-6 p-6 md:p-10">
@@ -65,7 +104,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="dashboard" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
           <TabsTrigger value="dashboard" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">概览</span>
@@ -95,52 +134,59 @@ export default function AdminPage() {
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">总用户数</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">35</div>
-                <p className="text-xs text-muted-foreground">较上月 +12%</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">活跃用户</CardTitle>
-                <Zap className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">28</div>
-                <p className="text-xs text-muted-foreground">较上月 +5%</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">系统负载</CardTitle>
-                <BarChart3 className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">28%</div>
-                <div className="mt-2 h-2 w-full rounded-full bg-muted">
-                  <div className="h-full w-[28%] rounded-full bg-primary"></div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">存储使用</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">65%</div>
-                <div className="mt-2 h-2 w-full rounded-full bg-muted">
-                  <div className="h-full w-[65%] rounded-full bg-primary"></div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Skeleton className="h-[108px]" />
+              <Skeleton className="h-[108px]" />
+              <Skeleton className="h-[108px]" />
+              <Skeleton className="h-[108px]" />
+            </div>
+          ) : dashboardData ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">总用户数</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{dashboardData.totalUsers}</div>
+                  <p className="text-xs text-muted-foreground">当前系统中的用户总数</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">活跃用户</CardTitle>
+                  <Zap className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{dashboardData.activeUsers}</div>
+                  <p className="text-xs text-muted-foreground">状态为"活跃"的用户总数</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">系统负载</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{dashboardData.systemLoad}%</div>
+                  <p className="text-xs text-muted-foreground">模拟数据 - 实时监控需要额外工具</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">存储使用</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{dashboardData.storageUsage}%</div>
+                  <p className="text-xs text-muted-foreground">模拟数据 - 实时监控需要额外工具</p>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <p>无法加载概览数据。</p>
+          )}
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="lg:col-span-4">
@@ -260,36 +306,25 @@ export default function AdminPage() {
                 <CardDescription>系统中各角色用户的数量分布</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>超级管理员</span>
-                      <span className="font-medium">2</span>
-                    </div>
-                    <Progress value={2} max={35} className="h-2" />
+                {isLoading ? (
+                  <div className="space-y-4">
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>管理员</span>
-                      <span className="font-medium">5</span>
+                ) : dashboardData?.roleDistribution && dashboardData.totalUsers > 0 ? (
+                  dashboardData.roleDistribution.map(item => (
+                    <div key={item.role} className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>{roleDisplayName[item.role] || item.role}</span>
+                        <span className="font-medium">{item.count}</span>
+                      </div>
+                      <Progress value={(item.count / dashboardData.totalUsers) * 100} className="h-2" />
                     </div>
-                    <Progress value={5} max={35} className="h-2" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>财务管理员</span>
-                      <span className="font-medium">3</span>
-                    </div>
-                    <Progress value={3} max={35} className="h-2" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>实验室成员</span>
-                      <span className="font-medium">25</span>
-                    </div>
-                    <Progress value={25} max={35} className="h-2" />
-                  </div>
-                </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">暂无角色分布数据</p>
+                )}
               </CardContent>
               <CardFooter>
                 {currentRole === "super_admin" && (
@@ -307,6 +342,14 @@ export default function AdminPage() {
 
         <TabsContent value="users" className="space-y-4">
           <UsersTable />
+        </TabsContent>
+
+        <TabsContent value="logs" className="space-y-4">
+          <LogsTable />
+        </TabsContent>
+
+        <TabsContent value="security" className="space-y-4">
+          <SecuritySettings />
         </TabsContent>
 
         {currentRole === "super_admin" && (
@@ -334,76 +377,8 @@ export default function AdminPage() {
           </TabsContent>
         )}
 
-        <TabsContent value="security" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>安全设置</CardTitle>
-              <CardDescription>管理系统安全和访问控制</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p>此模块允许您管理系统的安全设置，包括：</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>密码策略设置</li>
-                <li>登录尝试限制</li>
-                <li>双因素认证设置</li>
-                <li>IP访问限制</li>
-                <li>会话超时设置</li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" asChild>
-                <Link href="/admin/security">进入安全设置</Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="logs" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>系统日志</CardTitle>
-              <CardDescription>查看和分析系统日志</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p>此模块允许您查看和分析系统日志，包括：</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>用户登录日志</li>
-                <li>操作审计日志</li>
-                <li>系统错误日志</li>
-                <li>安全事件日志</li>
-                <li>日志导出和分析</li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" asChild>
-                <Link href="/admin/logs">查看系统日志</Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
         <TabsContent value="settings" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>系统设置</CardTitle>
-              <CardDescription>管理系统全局设置</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p>此模块允许您管理系统的全局设置，包括：</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>系统基本信息设置</li>
-                <li>邮件服务器配置</li>
-                <li>存储设置</li>
-                <li>备份和恢复</li>
-                <li>系统维护模式</li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" asChild>
-                <Link href="/admin/settings">进入系统设置</Link>
-              </Button>
-            </CardFooter>
-          </Card>
+          <GeneralSettings />
         </TabsContent>
       </Tabs>
     </div>
