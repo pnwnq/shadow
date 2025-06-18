@@ -14,26 +14,27 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  studentId     String?   @unique
-  major         String?
-  role          Role      @default(MEMBER)
-  status        UserStatus @default(PENDING)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-  documents     Document[]
-  logs          AuditLog[]
-  posts         CommunityPost[]
-  comments      CommunityComment[]
-  votes         CommunityPostVote[]
-  notifications Notification[]
+  id                   String                 @id @default(cuid())
+  name                 String?
+  email                String                 @unique
+  emailVerified        DateTime?
+  password             String?
+  image                String?
+  studentId            String?                @unique
+  major                String?
+  role                 Role                   @default(MEMBER)
+  status               UserStatus             @default(PENDING)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  accounts             Account[]
+  sessions             Session[]
+  documents            Document[]
+  logs                 AuditLog[]
+  posts                CommunityPost[]
+  comments             CommunityComment[]
+  votes                CommunityPostVote[]
+  notifications        Notification[]
+  CommunityCommentVote CommunityCommentVote[]
 }
 
 model Account {
@@ -84,7 +85,7 @@ enum UserStatus {
 }
 
 model Document {
-  id          String      @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   fileName    String
   description String?
@@ -93,14 +94,14 @@ model Document {
   size        Float
   category    String
   tags        String[]
-  isTemplate  Boolean     @default(false)
-  
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  uploaderId  String
-  uploader    User        @relation(fields: [uploaderId], references: [id])
-  
+  isTemplate  Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  uploaderId String
+  uploader   User   @relation(fields: [uploaderId], references: [id])
+
   @@index([uploaderId])
 }
 
@@ -125,20 +126,20 @@ model AuditLog {
 }
 
 model SystemSetting {
-  key         String @id
-  value       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  key       String   @id
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Community Feature Models
 model CommunityCategory {
-  id          String            @id @default(cuid())
-  name        String            @unique
+  id          String          @id @default(cuid())
+  name        String          @unique
   description String?
   posts       CommunityPost[]
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 }
 
 enum CommunityPostType {
@@ -148,41 +149,62 @@ enum CommunityPostType {
 }
 
 model CommunityPost {
-  id         String             @id @default(cuid())
+  id         String              @id @default(cuid())
   title      String
-  content    String?            @db.Text
-  type       CommunityPostType  @default(BLOG)
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  author     User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  content    String?             @db.Text
+  type       CommunityPostType   @default(BLOG)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  author     User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId   String
-  category   CommunityCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  category   CommunityCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?
   comments   CommunityComment[]
   votes      CommunityPostVote[]
-  viewCount  Int                @default(0)
+  viewCount  Int                 @default(0)
 }
 
 model CommunityComment {
-  id        String        @id @default(cuid())
-  content   String        @db.Text
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  String
-  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  post   CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  // for replies
+  replyToId String?
+  replyTo   CommunityComment?  @relation("Replies", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   CommunityComment[] @relation("Replies")
+
+  // for votes
+  votes CommunityCommentVote[]
 }
 
 model CommunityPostVote {
-  id     String   @id @default(cuid())
+  id     String        @id @default(cuid())
   type   VoteType
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   post   CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
 
   @@unique([userId, postId])
+}
+
+model CommunityCommentVote {
+  id        String           @id @default(cuid())
+  type      VoteType
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  comment   CommunityComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+
+  @@unique([userId, commentId])
 }
 
 enum VoteType {
@@ -193,11 +215,11 @@ enum VoteType {
 // End of Community Feature Models
 
 model Notification {
-  id        String   @id @default(cuid())
-  recipient User     @relation(fields: [recipientId], references: [id])
+  id          String   @id @default(cuid())
+  recipient   User     @relation(fields: [recipientId], references: [id])
   recipientId String
-  payload   Json
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  payload     Json
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

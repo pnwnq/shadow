@@ -14,6 +14,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.58.1(react@19.1.0))
+      '@novu/nextjs':
+        specifier: ^3.5.0
+        version: 3.5.0(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@novu/node':
         specifier: ^2.6.6
         version: 2.6.6
@@ -631,6 +634,24 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
 
+  '@motionone/animation@10.18.0':
+    resolution: {integrity: sha512-9z2p5GFGCm0gBsZbi8rVMOAJCtw1WqBTIPw3ozk06gDvZInBPIsQcHgYogEJ4yuHJ+akuW8g1SEIOpTOvYs8hw==}
+
+  '@motionone/dom@10.18.0':
+    resolution: {integrity: sha512-bKLP7E0eyO4B2UaHBBN55tnppwRnaE3KFfh3Ps9HhnAkar3Cb69kUCJY9as8LrccVYKgHA+JY5dOQqJLOPhF5A==}
+
+  '@motionone/easing@10.18.0':
+    resolution: {integrity: sha512-VcjByo7XpdLS4o9T8t99JtgxkdMcNWD3yHU/n6CLEz3bkmKDRZyYQ/wmSf6daum8ZXqfUAgFeCZSpJZIMxaCzg==}
+
+  '@motionone/generators@10.18.0':
+    resolution: {integrity: sha512-+qfkC2DtkDj4tHPu+AFKVfR/C30O1vYdvsGYaR13W/1cczPrrcjdvYCj0VLFuRMN+lP1xvpNZHCRNM4fBzn1jg==}
+
+  '@motionone/types@10.17.1':
+    resolution: {integrity: sha512-KaC4kgiODDz8hswCrS0btrVrzyU2CSQKO7Ps90ibBVSQmjkrt2teqta6/sOG59v7+dPnKMAg13jyqtMKV2yJ7A==}
+
+  '@motionone/utils@10.18.0':
+    resolution: {integrity: sha512-3XVF7sgyTSI2KWvTf6uLlBJ5iAgRgmvp3bpuOiQJvInd4nZ19ET8lX5unn30SlmRH7hXbBbH+Gxd0m0klJ3Xtw==}
+
   '@next/env@15.2.4':
     resolution: {integrity: sha512-+SFtMgoiYP3WoSswuNmxJOCwi06TdWE733D+WPjpXIe4LXGULwEaofiiAy6kbS0+XjM5xF5n3lKuBwN2SnqD9g==}
 
@@ -703,6 +724,19 @@ packages:
     engines: {node: '>=10'}
     deprecated: April 3, 2025 marks the end of support for @novu/client. Users can migrate to the new @novu/js package. For more information, visit https://docs.novu.co/platform/sdks/javascript
 
+  '@novu/js@3.5.0':
+    resolution: {integrity: sha512-7m1PG+6xswsQj48nX+oYXtxZCUn6olZquwbYoqru9E4kA6TwFczjeLRcNvOP0iF2Y/UKwxfM/GXeXX+x7xX+zA==}
+
+  '@novu/nextjs@3.5.0':
+    resolution: {integrity: sha512-w8TmtNGrdJF5GBqKjYK+XpPkz61perP9BfgBSjh5TuqBJlSf2CmhNv/kiyQYLLrqgSWYELgrZIimscixUZFxmg==}
+    peerDependencies:
+      next: '>=13.5.2 || ^14.0.0 || ^15.0.0'
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-0
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-0
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+
   '@novu/node@2.6.6':
     resolution: {integrity: sha512-WMGzHOG1has1/FsMveE/Sak02vv6jAz1RLlw99tLARr3wQyQBdpMwtG8lNcZzi/hBogLJ07R6wFcZtgoXx/i4Q==}
     engines: {node: '>=10'}
@@ -714,6 +748,15 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
+
+  '@novu/react@3.5.0':
+    resolution: {integrity: sha512-/o5EVnO8+NpHUKvIlDJJ0PFtmisV0p+Aw4S2ceopYsoO7NdDRTaWIU3rBcDOrFdbNQOE+9IrOvDCpgElkskMVw==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-0
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-0
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
 
   '@novu/shared@2.6.6':
     resolution: {integrity: sha512-Y4YrvvJHX8yopkkvb4MnS+u59JBjUsrJBYqcn/STKkbbdzmSPccVwA0GUTiCZivUKSBtrTvllIHtP7Bi5ATQ4A==}
@@ -1559,6 +1602,26 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+
+  '@solid-primitives/props@3.2.1':
+    resolution: {integrity: sha512-SuTuCctLLZbUL1QyWamQGWSWPIgoc/gXt5kL8P2yLhb51f9Dj+WHxU0shXBjzx7z+hDc5KtheQgM4NnJqQJi2A==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/refs@1.1.1':
+    resolution: {integrity: sha512-MIQ7Bh59IiT9NDQPf6iWRnPe0RgKggEjF0H+iMoIi1KBCcp4Mfss2IkUWYPr9wqQg963ZQFbcg5D6oN9Up6Mww==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/transition-group@1.1.1':
+    resolution: {integrity: sha512-yf8mheMunnAkPSH2WNlemdSR2mrBar0Hw2FenZCqr10iKrI4sUiERIOR4nnFNnUK73BVwAA/xeYbiOk6s36fvw==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/utils@6.3.1':
+    resolution: {integrity: sha512-4/Z59nnwu4MPR//zWZmZm2yftx24jMqQ8CSd/JobL26TPfbn4Ph8GKNVJfGJWShg1QB98qObJSskqizbTvcLLA==}
+    peerDependencies:
+      solid-js: ^1.6.12
 
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
@@ -2421,6 +2484,9 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
+  hey-listen@1.0.8:
+    resolution: {integrity: sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==}
+
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
@@ -2726,6 +2792,9 @@ packages:
   minizlib@3.0.2:
     resolution: {integrity: sha512-oG62iEk+CYt5Xj2YqI5Xi9xWUeZhDI8jjQmC5oThVH5JGCTgIjr7ciJDzC7MBzYd//WvR1OTmP5Q38Q8ShQtVA==}
     engines: {node: '>= 18'}
+
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
 
   mkdirp-classic@0.5.3:
     resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
@@ -3160,6 +3229,16 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  seroval-plugins@1.3.2:
+    resolution: {integrity: sha512-0QvCV2lM3aj/U3YozDiVwx9zpH0q8A60CTWIv4Jszj/givcudPb48B+rkU5D51NJ0pTpweGMttHjboPa9/zoIQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      seroval: ^1.0
+
+  seroval@1.3.2:
+    resolution: {integrity: sha512-RbcPH1n5cfwKrru7v7+zrZvjLurgHhGyso3HTyGtRivGWgYjbOmGuivCQaORNELjNONoK35nj28EoWul9sb1zQ==}
+    engines: {node: '>=10'}
+
   shallow-equal@3.1.0:
     resolution: {integrity: sha512-pfVOw8QZIXpMbhBWvzBISicvToTiM5WBF1EeAUZDDSb5Dt29yl4AYbyywbJFSEsRUMr7gJaxqCdr4L3tQf9wVg==}
 
@@ -3195,6 +3274,21 @@ packages:
   socket.io-parser@4.2.4:
     resolution: {integrity: sha512-/GbIKmo8ioc+NIWIhwdecY0ge+qVBSMdgxGygevmdHj24bsfgtCmcUUcQ5ZzcylGFHsN3k4HB4Cgkl96KVnuew==}
     engines: {node: '>=10.0.0'}
+
+  solid-floating-ui@0.3.1:
+    resolution: {integrity: sha512-o/QmGsWPS2Z3KidAxP0nDvN7alI7Kqy0kU+wd85Fz+au5SYcnYm7I6Fk3M60Za35azsPX0U+5fEtqfOuk6Ao0Q==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@floating-ui/dom': ^1.5
+      solid-js: ^1.8
+
+  solid-js@1.9.7:
+    resolution: {integrity: sha512-/saTKi8iWEM233n5OSi1YHCCuh66ZIQ7aK2hsToPe4tqGm7qAejU1SwNuTPivbWAYq7SjuHVVYxxuZQNRbICiw==}
+
+  solid-motionone@1.0.4:
+    resolution: {integrity: sha512-aqEjgecoO9raDFznu/dEci7ORSmA26Kjj9J4Cn1Gyr0GZuOVdvsNxdxClTL9J40Aq/uYFx4GLwC8n70fMLHiuA==}
+    peerDependencies:
+      solid-js: ^1.8.0
 
   sonner@1.7.4:
     resolution: {integrity: sha512-DIS8z4PfJRbIyfVFDVnK9rO3eYDtse4Omcm6bt0oEr5/jtLgysmjuBl1frJ9E/EQZrFmKx2A8m/s5s9CRXIzhw==}
@@ -3915,6 +4009,41 @@ snapshots:
     dependencies:
       react: 19.1.0
 
+  '@motionone/animation@10.18.0':
+    dependencies:
+      '@motionone/easing': 10.18.0
+      '@motionone/types': 10.17.1
+      '@motionone/utils': 10.18.0
+      tslib: 2.8.1
+
+  '@motionone/dom@10.18.0':
+    dependencies:
+      '@motionone/animation': 10.18.0
+      '@motionone/generators': 10.18.0
+      '@motionone/types': 10.17.1
+      '@motionone/utils': 10.18.0
+      hey-listen: 1.0.8
+      tslib: 2.8.1
+
+  '@motionone/easing@10.18.0':
+    dependencies:
+      '@motionone/utils': 10.18.0
+      tslib: 2.8.1
+
+  '@motionone/generators@10.18.0':
+    dependencies:
+      '@motionone/types': 10.17.1
+      '@motionone/utils': 10.18.0
+      tslib: 2.8.1
+
+  '@motionone/types@10.17.1': {}
+
+  '@motionone/utils@10.18.0':
+    dependencies:
+      '@motionone/types': 10.17.1
+      hey-listen: 1.0.8
+      tslib: 2.8.1
+
   '@next/env@15.2.4': {}
 
   '@next/swc-darwin-arm64@15.2.4':
@@ -3957,6 +4086,34 @@ snapshots:
     dependencies:
       '@novu/shared': 2.6.6
 
+  '@novu/js@3.5.0':
+    dependencies:
+      '@floating-ui/dom': 1.7.1
+      class-variance-authority: 0.7.1
+      clsx: 2.1.1
+      mitt: 3.0.1
+      socket.io-client: 4.7.2
+      solid-floating-ui: 0.3.1(@floating-ui/dom@1.7.1)(solid-js@1.9.7)
+      solid-js: 1.9.7
+      solid-motionone: 1.0.4(solid-js@1.9.7)
+      tailwind-merge: 2.6.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@novu/nextjs@3.5.0(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@novu/react': 3.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      next: 15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+    optionalDependencies:
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   '@novu/node@2.6.6':
     dependencies:
       '@novu/shared': 2.6.6
@@ -3996,6 +4153,17 @@ snapshots:
       - bufferutil
       - debug
       - react-native
+      - supports-color
+      - utf-8-validate
+
+  '@novu/react@3.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@novu/js': 3.5.0
+      react: 19.1.0
+    optionalDependencies:
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - bufferutil
       - supports-color
       - utf-8-validate
 
@@ -4861,6 +5029,24 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
+  '@solid-primitives/props@3.2.1(solid-js@1.9.7)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.1(solid-js@1.9.7)
+      solid-js: 1.9.7
+
+  '@solid-primitives/refs@1.1.1(solid-js@1.9.7)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.1(solid-js@1.9.7)
+      solid-js: 1.9.7
+
+  '@solid-primitives/transition-group@1.1.1(solid-js@1.9.7)':
+    dependencies:
+      solid-js: 1.9.7
+
+  '@solid-primitives/utils@6.3.1(solid-js@1.9.7)':
+    dependencies:
+      solid-js: 1.9.7
+
   '@swc/counter@0.1.3': {}
 
   '@swc/helpers@0.5.15':
@@ -5689,6 +5875,8 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
+  hey-listen@1.0.8: {}
+
   hoist-non-react-statics@3.3.2:
     dependencies:
       react-is: 16.13.1
@@ -5929,6 +6117,8 @@ snapshots:
   minizlib@3.0.2:
     dependencies:
       minipass: 7.1.2
+
+  mitt@3.0.1: {}
 
   mkdirp-classic@0.5.3:
     optional: true
@@ -6336,6 +6526,12 @@ snapshots:
 
   semver@7.7.2: {}
 
+  seroval-plugins@1.3.2(seroval@1.3.2):
+    dependencies:
+      seroval: 1.3.2
+
+  seroval@1.3.2: {}
+
   shallow-equal@3.1.0: {}
 
   sharp@0.33.5:
@@ -6405,6 +6601,27 @@ snapshots:
       debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
+
+  solid-floating-ui@0.3.1(@floating-ui/dom@1.7.1)(solid-js@1.9.7):
+    dependencies:
+      '@floating-ui/dom': 1.7.1
+      solid-js: 1.9.7
+
+  solid-js@1.9.7:
+    dependencies:
+      csstype: 3.1.3
+      seroval: 1.3.2
+      seroval-plugins: 1.3.2(seroval@1.3.2)
+
+  solid-motionone@1.0.4(solid-js@1.9.7):
+    dependencies:
+      '@motionone/dom': 10.18.0
+      '@motionone/utils': 10.18.0
+      '@solid-primitives/props': 3.2.1(solid-js@1.9.7)
+      '@solid-primitives/refs': 1.1.1(solid-js@1.9.7)
+      '@solid-primitives/transition-group': 1.1.1(solid-js@1.9.7)
+      csstype: 3.1.3
+      solid-js: 1.9.7
 
   sonner@1.7.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
