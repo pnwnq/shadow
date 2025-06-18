@@ -4,32 +4,56 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  const adminEmail = '2228214645@qq.com';
+  console.log("Start seeding...");
 
-  console.log(`开始为用户 ${adminEmail} 提升权限...`);
+  // Clean up existing data
+  await prisma.user.deleteMany({});
+  // Add other model cleanups if necessary, e.g., await prisma.account.deleteMany({});
 
-  // 查找用户
-  const user = await prisma.user.findUnique({
-    where: { email: adminEmail },
-  });
+  console.log("Old data cleaned up.");
 
-  if (!user) {
-    console.error(`错误：未找到邮箱为 ${adminEmail} 的用户。`);
-    return;
-  }
+  const hashedPassword = await bcrypt.hash("password123", 10);
 
-  // 更新用户的角色和状态
-  const updatedUser = await prisma.user.update({
-    where: { email: adminEmail },
+  // 1. Create Super Admin
+  await prisma.user.create({
     data: {
+      name: "Super Admin",
+      email: "admin@example.com",
+      password: hashedPassword,
       role: Role.SUPER_ADMIN,
       status: UserStatus.ACTIVE,
+      emailVerified: new Date(),
     },
   });
+  console.log("Created Super Admin (admin@example.com)");
 
-  console.log('权限提升成功！');
-  console.log('用户信息更新为:');
-  console.log(updatedUser);
+  // 2. Create Pending User
+  await prisma.user.create({
+    data: {
+      name: "Pending User",
+      email: "pending@example.com",
+      password: hashedPassword,
+      role: Role.MEMBER,
+      status: UserStatus.PENDING,
+      emailVerified: new Date(),
+    },
+  });
+  console.log("Created Pending User (pending@example.com)");
+
+  // 3. Create Normal Member
+  await prisma.user.create({
+    data: {
+      name: "Normal Member",
+      email: "user@example.com",
+      password: hashedPassword,
+      role: Role.MEMBER,
+      status: UserStatus.ACTIVE,
+      emailVerified: new Date(),
+    },
+  });
+  console.log("Created Normal Member (user@example.com)");
+
+  console.log("Seeding finished.");
 }
 
 main()

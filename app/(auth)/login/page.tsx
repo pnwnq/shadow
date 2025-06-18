@@ -101,8 +101,8 @@ export default function LoginPage() {
               onClick={() => signIn("github", { callbackUrl: "/home" })}
               disabled={isLoading}
             >
-                <Github className="mr-2 h-4 w-4" />
-                GitHub 登录
+              <Github className="mr-2 h-4 w-4" />
+              GitHub 登录
             </Button>
           </div>
         </CardFooter>

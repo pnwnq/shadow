@@ -64,20 +64,11 @@ export default function RegisterPage() {
         throw new Error(data.error || "注册失败")
       }
 
-      // 注册成功后自动登录
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      })
+      toast.success("注册成功！您的账户正在等待审核。")
 
-      if (result?.error) {
-        toast.error(result.error)
-        return
-      }
+      // 注册成功后，重定向到待审核页面
+      router.push("/pending-approval")
 
-      router.push("/home")
-      router.refresh()
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message)
@@ -212,8 +203,8 @@ export default function RegisterPage() {
               onClick={() => signIn("github", { callbackUrl: "/home" })}
               disabled={isLoading}
             >
-                <Github className="mr-2 h-4 w-4" />
-                GitHub 注册
+              <Github className="mr-2 h-4 w-4" />
+              GitHub 注册
             </Button>
           </div>
         </CardFooter>

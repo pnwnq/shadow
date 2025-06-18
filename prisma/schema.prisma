@@ -29,6 +29,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   documents     Document[]
+  logs          AuditLog[]
 }
 
 model Account {
@@ -95,4 +96,27 @@ model Document {
   uploader    User        @relation(fields: [uploaderId], references: [id])
   
   @@index([uploaderId])
+}
+
+enum LogLevel {
+  INFO
+  WARN
+  ERROR
+  AUDIT
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  timestamp DateTime @default(now())
+  level     LogLevel
+  action    String
+  message   String
+  ipAddress String?
+  
+  userId    String?
+  user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([level])
+  @@index([action])
 }

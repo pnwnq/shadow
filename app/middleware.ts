@@ -1,47 +1,56 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { withAuth, NextRequestWithAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import { UserStatus } from "@prisma/client";
 
-// 定义不需要认证的公共路径
-const publicPaths = ["/welcome", "/about", "/achievements", "/contact", "/login", "/register", "/api/auth"]
+// Define routes that are public and do not require authentication
+const publicRoutes = ["/login", "/register", "/about", "/contact"];
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+// The page for users whose accounts are pending approval
+const pendingApprovalPage = "/pending-approval";
 
-  // 检查是否是公共路径
-  const isPublicPath = publicPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+// The default redirect path after a user logs in successfully
+const defaultRedirect = "/home";
 
-  // 如果是API路由，跳过认证检查
-  if (pathname.startsWith("/api") && !pathname.startsWith("/api/auth")) {
-    return NextResponse.next()
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(request: NextRequestWithAuth) {
+    const { pathname } = request.nextUrl;
+    const { token } = request.nextauth;
+
+    // If user is not logged in, `token` will be null.
+    // withAuth handles redirection to login page automatically.
+
+    // If user is logged in, check their status
+    if (token) {
+      const userStatus = token.status as UserStatus;
+
+      // If user is pending and not on the approval page, redirect them there
+      if (userStatus === UserStatus.PENDING && pathname !== pendingApprovalPage) {
+        return NextResponse.redirect(new URL(pendingApprovalPage, request.url));
+      }
+
+      // If user is active and trying to access the approval page, redirect to dashboard
+      if (userStatus === UserStatus.ACTIVE && pathname === pendingApprovalPage) {
+        return NextResponse.redirect(new URL(defaultRedirect, request.url));
+      }
+    }
+
+    // Allow the request to proceed
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token, // This ensures that only authenticated users can access protected pages.
+    },
+    pages: {
+      signIn: "/login",
+    },
   }
+);
 
-  // 模拟检查用户是否已登录的逻辑
-  // 在实际应用中，这应该检查cookie或会话状态
-  const isAuthenticated = false // 这里应该是实际的认证检查
-
-  // 如果用户未登录且尝试访问非公共路径，重定向到登录页面
-  if (!isAuthenticated && !isPublicPath) {
-    return NextResponse.redirect(new URL("/login", request.url))
-  }
-
-  // 如果用户已登录且尝试访问登录或注册页面，重定向到主页
-  if (isAuthenticated && (pathname === "/login" || pathname === "/register")) {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
-  }
-
-  return NextResponse.next()
-}
-
-// 配置中间件应用的路径
+// Match all paths except for static files, public files, and Next.js internals
 export const config = {
   matcher: [
-    /*
-     * 匹配所有路径除了:
-     * - _next (Next.js 内部文件)
-     * - 静态文件 (public 文件夹)
-     * - 图片 (通常存储在 public/images)
-     * - favicon.ico (浏览器自动请求)
-     */
-    "/((?!_next/static|_next/image|images|favicon.ico).*)",
+    "/((?!api|_next/static|_next/image|images|favicon.ico).*)",
   ],
-}
+};

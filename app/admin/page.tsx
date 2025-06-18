@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { useEffect, useState as useReactState } from "react"
+import { UsersTable } from "./components/users-table"
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard")
@@ -305,27 +306,7 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="users" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>用户管理</CardTitle>
-              <CardDescription>管理系统用户账号和信息</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p>此模块允许您管理系统中的用户账号，包括：</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>查看和搜索用户列表</li>
-                <li>创建新用户账号</li>
-                <li>编辑用户信息和状态</li>
-                <li>重置用户密码</li>
-                <li>禁用或删除用户账号</li>
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" asChild>
-                <Link href="/admin/users">进入用户管理</Link>
-              </Button>
-            </CardFooter>
-          </Card>
+          <UsersTable />
         </TabsContent>
 
         {currentRole === "super_admin" && (
