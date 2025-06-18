@@ -1,38 +1,46 @@
 "use client"
 
-import { type ReactNode, useEffect, useState } from "react"
+import { type ReactNode } from "react"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { AlertCircle } from "lucide-react"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { currentUserHasPermission, type Permission, type PermissionModule } from "@/lib/auth-utils"
+import { type Role } from "@/types"
+
+// Note: This is a simplified, client-side permission check.
+// For critical operations, permissions should always be re-validated on the server-side.
+const rolePermissions: Record<Role, string[]> = {
+  SUPER_ADMIN: ["all"],
+  ADMIN: ["admin"],
+  MEMBER: ["member"],
+  COMPETITION_ACCOUNTANT: ["accountant"],
+}
+
+function hasPermission(userRole: Role, requiredPermission: string): boolean {
+  if (!userRole) return false
+  const userPermissions = rolePermissions[userRole]
+  if (!userPermissions) return false
+
+  if (userPermissions.includes("all")) return true
+  return userPermissions.includes(requiredPermission)
+}
 
 interface AuthGuardProps {
   children: ReactNode
-  requiredPermission: Permission | PermissionModule
+  requiredPermission: string
   fallback?: ReactNode
   redirectTo?: string
 }
 
 export function AuthGuard({ children, requiredPermission, fallback, redirectTo }: AuthGuardProps) {
   const router = useRouter()
-  const [hasAccess, setHasAccess] = useState<boolean | null>(null)
+  const { data: session, status } = useSession()
 
-  useEffect(() => {
-    // 检查用户是否有所需权限
-    const hasPermission = currentUserHasPermission(requiredPermission)
-    setHasAccess(hasPermission)
-
-    // 如果没有权限且指定了重定向路径，则重定向
-    if (!hasPermission && redirectTo) {
-      router.push(redirectTo)
-    }
-  }, [requiredPermission, redirectTo, router])
-
-  // 加载状态
-  if (hasAccess === null) {
+  // Handle loading state
+  if (status === "loading") {
     return (
       <div className="space-y-4">
         <Skeleton className="h-8 w-full" />
@@ -42,17 +50,34 @@ export function AuthGuard({ children, requiredPermission, fallback, redirectTo }
     )
   }
 
-  // 有权限，显示内容
+  // Handle unauthenticated state or missing role
+  if (status === "unauthenticated" || !session?.user?.role) {
+    if (redirectTo) {
+      router.push(redirectTo)
+      return null // or a loading spinner
+    }
+    return fallback || <DefaultFallback /> // Show fallback or default message
+  }
+
+  // Check permission
+  const userRole = session.user.role
+  const hasAccess = hasPermission(userRole, requiredPermission)
+
   if (hasAccess) {
     return <>{children}</>
   }
 
-  // 无权限，显示自定义回退内容或默认的无权限提示
-  if (fallback) {
-    return <>{fallback}</>
+  // Handle no access
+  if (redirectTo) {
+    router.push(redirectTo)
+    return null // or a loading spinner
   }
 
-  // 默认的无权限提示
+  return fallback || <DefaultFallback />
+}
+
+const DefaultFallback = () => {
+  const router = useRouter()
   return (
     <Alert variant="destructive" className="my-4">
       <AlertCircle className="h-4 w-4" />

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Search, Filter, Plus, MessageSquare, ThumbsUp, Eye, Users, MessageCircle, Bell } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -11,7 +12,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { hasPermission, getCurrentUserRole } from "@/lib/auth-utils"
 
 // 模拟数据 - 帖子
 const posts = [
@@ -120,8 +120,10 @@ export default function CommunityClientPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("all")
   const router = useRouter()
-  const userRole = getCurrentUserRole()
-  const canPost = hasPermission(userRole, "community_post")
+  const { data: session, status } = useSession()
+
+  const userRole = session?.user?.role
+  const canPost = status === "authenticated" && userRole && ["SUPER_ADMIN", "ADMIN", "MEMBER"].includes(userRole)
 
   // 过滤帖子
   const filteredPosts = posts.filter((post) => {

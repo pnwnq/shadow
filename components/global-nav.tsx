@@ -1,27 +1,21 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Menu, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
 import { UserNav } from "@/components/user-nav"
-import { getCurrentUserRole, hasPermission } from "@/lib/auth-utils"
 
 export function GlobalNav() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
-  const [userRole, setUserRole] = useState("guest")
-  const [mounted, setMounted] = useState(false)
-
-  // 在客户端渲染后获取用户角色
-  useEffect(() => {
-    setUserRole(getCurrentUserRole())
-    setMounted(true)
-  }, [])
+  const { data: session, status } = useSession()
+  const userRole = session?.user?.role
 
   // 检查路径是否是公共路径
   const isPublicPath = ["/welcome", "/about", "/achievements", "/contact", "/login", "/register"].some(
@@ -172,12 +166,12 @@ export function GlobalNav() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="hidden font-bold sm:inline-block">Shadow实验室</span>
           </Link>
-          {mounted && <MainNav userRole={userRole} />}
+          {status === 'authenticated' && <MainNav userRole={userRole} />}
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="w-full flex-1 md:w-auto md:flex-none"></div>
           <nav className="flex items-center">
-            {mounted && hasPermission(userRole as any, "system_settings") && (
+            {status === 'authenticated' && (userRole === "SUPER_ADMIN" || userRole === "ADMIN") && (
               <Button variant="ghost" size="sm" asChild className="mr-2">
                 <Link href="/admin">管理中心</Link>
               </Button>
@@ -192,7 +186,9 @@ export function GlobalNav() {
       </div>
       {isOpen && (
         <div className="container md:hidden">
-          <nav className="flex flex-col space-y-3 pb-3 pt-1">{mounted && <MainNav userRole={userRole} mobile />}</nav>
+          <nav className="flex flex-col space-y-3 pb-3 pt-1">
+            {status === 'authenticated' && <MainNav userRole={userRole} mobile />}
+          </nav>
         </div>
       )}
     </header>

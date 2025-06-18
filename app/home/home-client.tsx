@@ -32,7 +32,7 @@ import {
 import { User } from '@prisma/client';
 
 interface HomeClientProps {
-  user: User;
+  user: User | null;
 }
 
 export function HomeClient({ user }: HomeClientProps) {
@@ -52,6 +52,24 @@ export function HomeClient({ user }: HomeClientProps) {
     { name: "深度学习应用", progress: 20, icon: <Beaker className="h-4 w-4" /> },
   ]
 
+  if (!user) {
+    return (
+      <div className="container mx-auto py-6 px-6 text-center">
+        <h1 className="text-3xl font-bold tracking-tight">欢迎来到我们的平台</h1>
+        <p className="text-muted-foreground mt-2">
+          登录以查看您的学习进度、项目状态和最新通知。
+        </p>
+        <div className="mt-6">
+          <Link href="/login">
+            <Button>
+              <UserPlus className="mr-2 h-4 w-4" />
+              登录 / 注册
+            </Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto py-6 px-6">
