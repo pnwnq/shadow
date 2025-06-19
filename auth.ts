@@ -17,6 +17,19 @@ export const {
             error: "/error",
       },
       events: {
+            async signIn({ user, account }) {
+                  await db.auditLog.create({
+                        data: {
+                              action: "USER_LOGIN",
+                              entityType: "USER",
+                              entityId: user.id!,
+                              userId: user.id!,
+                              level: "INFO",
+                              type: "login",
+                              // IP address is not available in this event context, will be null.
+                        }
+                  })
+            },
             async linkAccount({ user }) {
                   await db.user.update({
                         where: { id: user.id },
