@@ -18,13 +18,24 @@ export async function POST(
             const { id: postId } = params;
             const { content, replyToId } = CommentValidator.parse({ ...body, postId });
 
-            await db.communityComment.create({
+            const newComment = await db.communityComment.create({
                   data: {
                         content,
                         postId,
                         authorId: session.user.id,
                         replyToId,
                   },
+            });
+
+            await db.auditLog.create({
+                  data: {
+                        action: replyToId ? "COMMENT_REPLY_CREATED" : "COMMENT_CREATED",
+                        entityType: "COMMUNITY_COMMENT",
+                        entityId: newComment.id,
+                        userId: session.user.id,
+                        level: "INFO",
+                        type: "action"
+                  }
             });
 
             return new NextResponse("OK");

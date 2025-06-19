@@ -28,6 +28,17 @@ export async function POST(req: Request) {
                   },
             });
 
+            await db.auditLog.create({
+                  data: {
+                        action: "POST_CREATED",
+                        entityType: "COMMUNITY_POST",
+                        entityId: post.id,
+                        userId: session.user.id,
+                        level: "INFO",
+                        type: "action"
+                  }
+            });
+
             // Revalidate the community page to show the new post
             revalidatePath("/community");
 

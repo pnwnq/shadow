@@ -45,6 +45,17 @@ export async function POST(req: Request) {
 
             await db.$transaction(updatePromises);
 
+            await db.auditLog.create({
+                  data: {
+                        action: "SECURITY_SETTINGS_UPDATED",
+                        entityType: "SYSTEM",
+                        entityId: session.user.id, // The user who performed the action
+                        userId: session.user.id,
+                        level: "WARN",
+                        type: "security"
+                  }
+            });
+
             return NextResponse.json({ message: "Settings updated successfully" });
       } catch (error) {
             console.error("[POST_SETTINGS]", error);

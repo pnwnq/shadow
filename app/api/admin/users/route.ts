@@ -49,7 +49,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
       const session = await auth();
 
-      if (!session?.user || session.user.role !== Role.ADMIN) {
+      if (!session?.user || (session.user.role !== Role.ADMIN && session.user.role !== Role.SUPER_ADMIN)) {
             return new NextResponse("Unauthorized", { status: 401 });
       }
 
@@ -75,6 +75,17 @@ export async function POST(req: Request) {
                         password: hashedPassword,
                         role,
                   },
+            });
+
+            await db.auditLog.create({
+                  data: {
+                        action: "USER_CREATED",
+                        entityType: "USER",
+                        entityId: newUser.id,
+                        userId: session.user.id,
+                        level: "INFO",
+                        type: "action"
+                  }
             });
 
             return NextResponse.json(newUser, { status: 201 });

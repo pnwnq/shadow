@@ -9,7 +9,7 @@ export async function GET(
 ) {
       const session = await auth();
 
-      if (!session?.user || session.user.role !== Role.ADMIN) {
+      if (!session?.user || (session.user.role !== Role.ADMIN && session.user.role !== Role.SUPER_ADMIN)) {
             return new NextResponse("Unauthorized", { status: 401 });
       }
 
@@ -33,18 +33,30 @@ export async function PATCH(
 ) {
       const session = await auth();
 
-      if (!session?.user || session.user.role !== Role.ADMIN) {
+      if (!session?.user || (session.user.role !== Role.ADMIN && session.user.role !== Role.SUPER_ADMIN)) {
             return new NextResponse("Unauthorized", { status: 401 });
       }
 
       try {
             const body = await req.json();
-            const { name, email, role } = body;
+            const { name, email, role, status } = body;
 
             const updatedUser = await db.user.update({
                   where: { id: params.userId },
-                  data: { name, email, role },
+                  data: { name, email, role, status },
             });
+
+            await db.auditLog.create({
+                  data: {
+                        action: `USER_UPDATE_${status ? (status === 'ACTIVE' ? 'APPROVED' : 'DEACTIVATED') : 'INFO_CHANGED'}`,
+                        entityType: "USER",
+                        entityId: updatedUser.id,
+                        userId: session.user.id!,
+                        level: "INFO",
+                        type: "action"
+                  }
+            });
+
             return NextResponse.json(updatedUser);
       } catch (error) {
             console.error("[ADMIN_USER_PATCH]", error);
@@ -58,14 +70,26 @@ export async function DELETE(
 ) {
       const session = await auth();
 
-      if (!session?.user || session.user.role !== Role.ADMIN) {
+      if (!session?.user || (session.user.role !== Role.ADMIN && session.user.role !== Role.SUPER_ADMIN)) {
             return new NextResponse("Unauthorized", { status: 401 });
       }
 
       try {
-            await db.user.delete({
+            const deletedUser = await db.user.delete({
                   where: { id: params.userId },
             });
+
+            await db.auditLog.create({
+                  data: {
+                        action: "USER_DELETED",
+                        entityType: "USER",
+                        entityId: deletedUser.id,
+                        userId: session.user.id!,
+                        level: "WARN",
+                        type: "action"
+                  }
+            });
+
             return new NextResponse(null, { status: 204 });
       } catch (error) {
             console.error("[ADMIN_USER_DELETE]", error);
