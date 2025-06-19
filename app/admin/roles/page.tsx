@@ -26,7 +26,9 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useToast } from "@/components/ui/use-toast"
-import { getCurrentUserRole } from "@/lib/auth-utils"
+import { useSession } from "next-auth/react"
+import { hasPermission } from "@/components/auth-guard"
+import { type Role } from "@/types"
 
 // 角色定义 - 已简化为5个角色
 const roles = [
@@ -245,31 +247,46 @@ const users = [
 export default function RolesManagementPage() {
   const { toast } = useToast()
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [searchQuery, setSearchQuery] = useState("")
   const [isEditRoleDialogOpen, setIsEditRoleDialogOpen] = useState(false)
   const [isEditPermissionsDialogOpen, setIsEditPermissionsDialogOpen] = useState(false)
   const [selectedRole, setSelectedRole] = useState<any>(null)
   const [userSearchQuery, setUserSearchQuery] = useState("")
   const [currentRole, setCurrentRole] = useState<string>("lab_member")
+  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([])
+  const [userList, setUserList] = useState(users)
 
   useEffect(() => {
-    // 检查当前用户角色，如果不是超级管理员，则重定向到首页
-    const role = getCurrentUserRole()
-    setCurrentRole(role)
+    if (status === "loading") return
 
-    if (role !== "super_admin") {
+    if (status === "unauthenticated") {
       toast({
-        title: "访问被拒绝",
-        description: "您没有权限访问角色管理页面",
+        title: "需要认证",
+        description: "请登录后访问此页面。",
         variant: "destructive",
       })
-      router.push("/home")
+      router.push("/login")
+      return
     }
-  }, [router, toast])
 
-  // 如果不是超级管理员，不渲染页面内容
-  if (currentRole !== "super_admin") {
-    return null
+    const userRole = session?.user?.role as Role
+    if (!hasPermission(userRole, "roles_manage")) {
+      toast({
+        title: "权限不足",
+        description: "您没有权限管理角色和权限。",
+        variant: "destructive",
+      })
+      router.push("/admin")
+    }
+  }, [status, session, router, toast])
+
+  if (status !== "authenticated" || !session?.user?.role || !hasPermission(session.user.role as Role, "roles_manage")) {
+    return (
+      <div className="flex h-full w-full items-center justify-center p-8">
+        <p className="text-muted-foreground">正在验证权限...</p>
+      </div>
+    )
   }
 
   // 过滤角色
@@ -568,9 +585,8 @@ export default function RolesManagementPage() {
                   ].map((color) => (
                     <div
                       key={color}
-                      className={`h-6 w-6 rounded-full cursor-pointer border-2 ${
-                        selectedRole.color === color ? "border-primary" : "border-transparent"
-                      } bg-${color}-500`}
+                      className={`h-6 w-6 rounded-full cursor-pointer border-2 ${selectedRole.color === color ? "border-primary" : "border-transparent"
+                        } bg-${color}-500`}
                       onClick={() => setSelectedRole({ ...selectedRole, color })}
                     />
                   ))}

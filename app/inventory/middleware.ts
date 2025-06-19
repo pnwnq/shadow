@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getCurrentUserRole } from "@/lib/auth-utils"
+import { auth } from "@/auth"
+import { type Role } from "@/types"
 
-export function middleware(request: NextRequest) {
+export const middleware = auth(async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const session = await auth()
 
-  // 模拟获取用户角色
-  // 在实际应用中，这应该从cookie或会话中获取
-  const userRole = getCurrentUserRole()
-  const isAdmin = userRole === "admin" || userRole === "finance_admin"
+  const userRole = session?.user?.role as Role
+  const isAdmin = userRole === "ADMIN" || userRole === "SUPER_ADMIN"
 
   // 如果是直接访问 /inventory 路径
   if (pathname === "/inventory") {
@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
   }
 
   return NextResponse.next()
-}
+})
 
 export const config = {
   matcher: ["/inventory", "/inventory/:path*"],

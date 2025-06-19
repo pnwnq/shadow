@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import {
   Calendar,
@@ -19,6 +19,10 @@ import {
   X,
 } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
+import { useSession } from "next-auth/react"
+import { hasPermission } from "@/components/auth-guard"
+import { type Role } from "@/types"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -33,8 +37,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { useToast } from "@/components/ui/use-toast"
-import { SiteHeader } from "@/components/site-header"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -67,9 +69,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-
-// 导入getCurrentUserRole
-import { getCurrentUserRole } from "@/lib/auth-utils"
 
 // 模拟竞赛数据
 const competitions = [
@@ -341,9 +340,55 @@ const memberRoles = ["队长", "硬件开发", "软件开发", "机械设计", "
 const taskPriorities = ["低", "中", "高", "紧急"]
 
 export default function CompetitionDetailPage() {
-  const params = useParams()
-  const router = useRouter()
   const { toast } = useToast()
+  const router = useRouter()
+  const params = useParams()
+  const { data: session, status } = useSession()
+
+  const [competition, setCompetition] = useState(() =>
+    competitions.find((c) => c.id === params.id)
+  )
+
+  useEffect(() => {
+    if (status === "loading") return
+
+    if (status === "unauthenticated") {
+      toast({
+        title: "需要认证",
+        description: "请登录后访问此页面。",
+        variant: "destructive",
+      })
+      router.push("/login")
+      return
+    }
+
+    const userRole = session?.user?.role as Role
+    if (!hasPermission(userRole, "competitions_view")) {
+      toast({
+        title: "权限不足",
+        description: "您没有权限查看竞赛详情。",
+        variant: "destructive",
+      })
+      router.push("/competitions")
+    }
+  }, [status, session, router, toast])
+
+  if (status !== "authenticated" || !session?.user?.role || !hasPermission(session.user.role as Role, "competitions_view")) {
+    return (
+      <div className="flex h-full w-full items-center justify-center p-8">
+        <p className="text-muted-foreground">正在验证权限...</p>
+      </div>
+    )
+  }
+
+  if (!competition) {
+    return (
+      <div className="flex h-full w-full items-center justify-center p-8">
+        <p className="text-muted-foreground">未找到对应的竞赛信息。</p>
+      </div>
+    )
+  }
+
   const [activeTab, setActiveTab] = useState("overview")
 
   // 全局编辑模式状态
@@ -381,10 +426,7 @@ export default function CompetitionDetailPage() {
   })
 
   // 获取当前用户角色
-  const userRole = getCurrentUserRole()
-
-  const competitionId = params.id as string
-  const competition = competitions.find((c) => c.id === competitionId)
+  const userRole = session?.user?.role as Role
 
   // 过滤已经是竞赛成员的人
   const availableMembers = labMembers.filter((member) => !competition?.members.some((m) => m.id === member.id))
@@ -423,7 +465,7 @@ export default function CompetitionDetailPage() {
   }
 
   const handleCreateProject = () => {
-    router.push("/projects/create?competition=" + competitionId)
+    router.push("/projects/create?competition=" + competition.id)
   }
 
   // 启用编辑模式
@@ -657,23 +699,6 @@ export default function CompetitionDetailPage() {
       ...prev,
       [field]: value,
     }))
-  }
-
-  if (!competition) {
-    return (
-      <div className="flex min-h-screen w-full flex-col">
-        <SiteHeader />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold">竞赛不存在</h2>
-            <p className="mt-2 text-muted-foreground">找不到请求的竞赛</p>
-            <Button className="mt-4" asChild>
-              <Link href="/competitions">返回竞赛列表</Link>
-            </Button>
-          </div>
-        </main>
-      </div>
-    )
   }
 
   // 计算剩余天数

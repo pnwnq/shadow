@@ -25,8 +25,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/components/ui/use-toast"
-import { hasPermission, getCurrentUserRole } from "@/lib/auth-utils"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { hasPermission } from "@/components/auth-guard"
+import { type Role } from "@/types"
 
 // 模拟数据 - 频道列表
 const channels = [
@@ -166,44 +168,43 @@ const initialMessages = {
 export default function CommunityChat() {
   const { toast } = useToast()
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [activeChannel, setActiveChannel] = useState("general")
   const [messages, setMessages] = useState(initialMessages)
   const [newMessage, setNewMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [hasPermissionToChat, setHasPermissionToChat] = useState(false)
-  const [isCheckingPermission, setIsCheckingPermission] = useState(true)
 
-  const checkPermission = useCallback(async () => {
-    const userRole = getCurrentUserRole()
-    const canAccessChat = hasPermission(userRole, "community_chat")
-    setHasPermissionToChat(canAccessChat)
-    setIsCheckingPermission(false)
+  useEffect(() => {
+    if (status === "loading") return // 等待会话加载
 
-    // 由于角色已简化，改为只有访客不能访问聊天
-    if (userRole === "guest") {
+    if (status === "unauthenticated") {
       toast({
         title: "访问受限",
-        description: "访客没有权限访问实时聊天功能，请登录后再试",
+        description: "请登录后访问实时聊天功能。",
+        variant: "destructive",
+      })
+      router.push("/login") // 重定向到登录页面
+      return
+    }
+
+    const userRole = session?.user?.role as Role
+    if (!hasPermission(userRole, "community_chat")) {
+      toast({
+        title: "权限不足",
+        description: "您没有权限访问聊天功能。",
         variant: "destructive",
       })
       router.push("/community")
     }
-  }, [router, toast])
+  }, [status, session, router, toast])
 
-  // 检查用户是否有权限访问聊天功能
-  useEffect(() => {
-    checkPermission()
-  }, [checkPermission])
-
-  // 如果正在检查权限，则不渲染任何内容
-  if (isCheckingPermission) {
-    return null
-  }
-
-  // 如果没有权限，不渲染聊天界面
-  if (!hasPermissionToChat) {
-    return null
+  if (status !== "authenticated" || !session?.user?.role || !hasPermission(session.user.role as Role, "community_chat")) {
+    return (
+      <div className="flex h-full w-full items-center justify-center p-8">
+        <p className="text-muted-foreground">正在验证权限...</p>
+      </div>
+    )
   }
 
   // 自动滚动到最新消息

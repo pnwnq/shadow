@@ -19,7 +19,7 @@ const rolePermissions: Record<Role, string[]> = {
   COMPETITION_ACCOUNTANT: ["accountant"],
 }
 
-function hasPermission(userRole: Role, requiredPermission: string): boolean {
+export function hasPermission(userRole: Role, requiredPermission: string): boolean {
   if (!userRole) return false
   const userPermissions = rolePermissions[userRole]
   if (!userPermissions) return false

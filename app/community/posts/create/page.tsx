@@ -20,7 +20,6 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
-import { SiteHeader } from "@/components/site-header"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 export default function CreatePostPage() {
@@ -94,7 +93,6 @@ export default function CreatePostPage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <SiteHeader />
       <main className="flex-1 space-y-6 p-4 md:p-8">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
