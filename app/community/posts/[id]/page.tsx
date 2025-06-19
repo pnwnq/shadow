@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { CommunityPost, CommunityComment, User, CommunityPostVote, CommunityCommentVote } from "@prisma/client"
 import { CommentCreationRequest, CommentValidator } from "@/lib/validators/comment"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { Card } from "@/components/ui/card"
 
 type ExtendedComment = CommunityComment & {
   author: User
@@ -119,6 +120,13 @@ function Comment({ comment, postId }: { comment: ExtendedComment; postId: string
   const userVote = comment.votes.find((v: CommunityCommentVote) => v.userId === session?.user.id)
   const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('').toUpperCase()
 
+  const handleReplyKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      commentForm.handleSubmit(data => postReply(data))();
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex gap-3">
@@ -151,7 +159,7 @@ function Comment({ comment, postId }: { comment: ExtendedComment; postId: string
                   <FormField control={commentForm.control} name="content" render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Textarea placeholder={`回复 @${comment.author.name}...`} {...field} />
+                        <Textarea placeholder={`回复 @${comment.author.name}...`} {...field} onKeyDown={handleReplyKeyDown} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -206,6 +214,13 @@ export default function PostDetailPage() {
       content: "",
     },
   })
+
+  const handleCommentKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      commentForm.handleSubmit(data => postComment(data))();
+    }
+  };
 
   const { mutate: postComment, isPending: isCommenting } = useMutation({
     mutationFn: async (payload: CommentCreationRequest) => {
@@ -354,14 +369,14 @@ export default function PostDetailPage() {
               <div className="mt-4 space-y-2">
                 <h4 className="text-sm font-medium">发表评论</h4>
                 <Form {...commentForm}>
-                  <form onSubmit={commentForm.handleSubmit(data => postComment(data))}>
+                  <form onSubmit={commentForm.handleSubmit(data => postComment(data))} className="space-y-4">
                     <FormField
                       control={commentForm.control}
                       name="content"
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Textarea placeholder="写下你的评论..." {...field} />
+                            <Textarea placeholder="写下你的评论..." {...field} onKeyDown={handleCommentKeyDown} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

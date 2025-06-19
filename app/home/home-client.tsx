@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Card,
@@ -36,6 +36,12 @@ interface HomeClientProps {
 }
 
 export function HomeClient({ user }: HomeClientProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // 模拟数据，因为这些模块还没开发
   const mockProjects = [
     { name: "智能机器人研究", deadline: "2024-12-15", progress: 65 },
@@ -212,11 +218,12 @@ export function HomeClient({ user }: HomeClientProps) {
                           <span>进度: {project.progress}%</span>
                           <span>
                             剩余时间:{' '}
-                            {Math.ceil(
+                            {isMounted ? Math.ceil(
                               (new Date(project.deadline).getTime() -
                                 Date.now()) /
                               (1000 * 60 * 60 * 24)
-                            )}{' '}
+                            ) : '...'}
+                            {' '}
                             天
                           </span>
                         </div>

@@ -79,21 +79,6 @@ export default function CreateProjectPage() {
 
   return (
     <div className="flex-1 space-y-6 p-6 md:p-8">
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/home">首页</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/projects">项目管理</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/projects/create">创建项目</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
 
       <div>
         <h1 className="text-3xl font-bold tracking-tight">创建项目</h1>

@@ -239,21 +239,6 @@ export default function CreateCompetitionPage() {
 
   return (
     <div className="flex-1 space-y-6 p-6 md:p-8">
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/home">首页</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/competitions">竞赛管理</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/competitions/create">创建竞赛</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>

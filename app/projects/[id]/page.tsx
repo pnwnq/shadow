@@ -678,21 +678,6 @@ export default function ProjectPage() {
 
   return (
     <div className="space-y-6 p-6 md:p-8">
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/home">首页</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/projects">项目管理</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/projects/${id}`}>{project.title}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
@@ -1204,9 +1189,8 @@ export default function ProjectPage() {
                             {itemCategories.map((category) => (
                               <div
                                 key={category}
-                                className={`px-2 py-1 rounded-md cursor-pointer hover:bg-muted ${
-                                  selectedCategory === category ? "bg-muted" : ""
-                                }`}
+                                className={`px-2 py-1 rounded-md cursor-pointer hover:bg-muted ${selectedCategory === category ? "bg-muted" : ""
+                                  }`}
                                 onClick={() => setSelectedCategory(category)}
                               >
                                 {category}
