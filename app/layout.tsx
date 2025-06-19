@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { GlobalNav } from "@/components/global-nav"
 import { AuthProvider } from "@/components/auth-provider"
 import Providers from "@/components/Providers"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -33,6 +34,7 @@ export default function RootLayout({
             </Providers>
           </ThemeProvider>
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   )
