@@ -23,3 +23,5 @@ alwaysApply: false
 模型是 User：数据库中代表用户的模型确实是 User。
 四级角色：Role 枚举（enum）中清晰地定义了四级角色：SUPER_ADMIN, ADMIN, MEMBER, COMPETITION_ACCOUNTANT。
 
+使用一个名为 dotenv-cli 的工具，在运行 prisma 命令之前，明确告诉它去加载 .env.local 文件
+

@@ -18,7 +18,6 @@ export default function WelcomePage() {
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-2">
         <div className="flex items-center gap-2">
           <Bot className="h-6 w-6" />
-          <h1 className="text-xl font-semibold">项目启动引导</h1>
         </div>
         <div className="flex items-center gap-2">
         </div>

@@ -35,6 +35,11 @@ model User {
   votes                CommunityPostVote[]
   notifications        Notification[]
   CommunityCommentVote CommunityCommentVote[]
+
+  // Relations for Item Management
+  ownedItems   Item[]    @relation("ItemOwner")
+  borrowedItems Item[]    @relation("ItemBorrower")
+  itemLogs     ItemLog[]
 }
 
 model Account {
@@ -213,6 +218,83 @@ enum VoteType {
 }
 
 // End of Community Feature Models
+
+// Item Management Models
+enum ItemStatus {
+  IN_STOCK
+  BORROWED
+  IN_REPAIR
+  DISPOSED
+}
+
+enum ItemLogAction {
+  CREATE
+  UPDATE
+  DELETE
+  BORROW
+  RETURN
+  REPAIR
+  DISPOSE
+}
+
+model ItemCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  items       Item[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Item {
+  id           String       @id @default(cuid())
+  name         String
+  model        String?
+  serialNumber String?      @unique
+  purchaseDate DateTime?
+  price        Float?
+  location     String?
+  status       ItemStatus   @default(IN_STOCK)
+  nfcTagId     String?      @unique
+  imageUrl     String?
+  notes        String?      @db.Text
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  category     ItemCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId   String
+
+  owner        User?        @relation("ItemOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId      String?
+
+  borrowedBy   User?        @relation("ItemBorrower", fields: [borrowedById], references: [id], onDelete: SetNull)
+  borrowedById String?
+  borrowedAt   DateTime?
+
+  logs         ItemLog[]
+
+  @@index([categoryId])
+  @@index([ownerId])
+  @@index([borrowedById])
+}
+
+model ItemLog {
+  id        String        @id @default(cuid())
+  action    ItemLogAction
+  details   Json?
+  createdAt DateTime      @default(now())
+
+  item      Item          @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId    String
+
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@index([itemId])
+  @@index([userId])
+}
+
+// End of Item Management Models
 
 model Notification {
   id          String   @id @default(cuid())

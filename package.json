@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "prisma generate && next dev",
+    "dev": "prisma generate && next dev -H 0.0.0.0",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "db:migrate": "pnpm dotenv -e .env.local -- prisma migrate dev",
     "db:seed": "npx dotenv -e .env.local -- ts-node --project tsconfig.seed.json prisma/seed.ts",
     "novu:trigger": "npx dotenv -e .env.local -- ts-node --project tsconfig.seed.json scripts/trigger.ts"
   },
