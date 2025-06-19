@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 export async function GET(req: Request) {
       const session = await auth();
 
-      if (!session?.user || session.user.role !== Role.ADMIN) {
+      if (!session?.user || (session.user.role !== Role.ADMIN && session.user.role !== Role.SUPER_ADMIN)) {
             return new NextResponse("Unauthorized", { status: 401 });
       }
 

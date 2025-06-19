@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
       const session = await auth();
 
-      if (!session?.user || session.user.role !== Role.ADMIN) {
+      if (!session?.user || (session.user.role !== Role.ADMIN && session.user.role !== Role.SUPER_ADMIN)) {
             return new NextResponse("Unauthorized", { status: 401 });
       }
 
@@ -28,7 +28,7 @@ export async function GET() {
 export async function POST(req: Request) {
       const session = await auth();
 
-      if (!session?.user || session.user.role !== Role.ADMIN) {
+      if (!session?.user || (session.user.role !== Role.ADMIN && session.user.role !== Role.SUPER_ADMIN)) {
             return new NextResponse("Unauthorized", { status: 401 });
       }
 

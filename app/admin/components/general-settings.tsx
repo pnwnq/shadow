@@ -117,7 +117,6 @@ export function GeneralSettings() {
                   <Tabs defaultValue="general" className="space-y-4">
                         <TabsList className="grid grid-cols-2 md:grid-cols-5">
                               <TabsTrigger value="general"><Settings className="mr-2 h-4 w-4" />基本设置</TabsTrigger>
-                              <TabsTrigger value="mail"><Mail className="mr-2 h-4 w-4" />邮件服务</TabsTrigger>
                               <TabsTrigger value="storage"><HardDrive className="mr-2 h-4 w-4" />存储设置</TabsTrigger>
                               <TabsTrigger value="backup"><Database className="mr-2 h-4 w-4" />备份恢复</TabsTrigger>
                               <TabsTrigger value="maintenance"><Server className="mr-2 h-4 w-4" />系统维护</TabsTrigger>
@@ -137,48 +136,6 @@ export function GeneralSettings() {
                                           <div className="space-y-2">
                                                 <Label htmlFor="sys-desc">系统描述</Label>
                                                 <Textarea id="sys-desc" value={settings.general_system_description} onChange={(e) => handleSettingChange("general_system_description", e.target.value)} />
-                                          </div>
-                                    </CardContent>
-                              </Card>
-                        </TabsContent>
-
-                        <TabsContent value="mail">
-                              <Card>
-                                    <CardHeader>
-                                          <CardTitle>邮件服务设置</CardTitle>
-                                          <CardDescription>配置系统外发邮件所使用的SMTP服务</CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="space-y-6">
-                                          <div className="space-y-2">
-                                                <Label>SMTP服务器</Label>
-                                                <Input value={settings.mail_host} onChange={(e) => handleSettingChange("mail_host", e.target.value)} />
-                                          </div>
-                                          <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                      <Label>SMTP端口</Label>
-                                                      <Input type="number" value={settings.mail_port} onChange={(e) => handleSettingChange("mail_port", e.target.value)} />
-                                                </div>
-                                                <div className="space-y-2">
-                                                      <Label>加密方式</Label>
-                                                      <Select value={settings.mail_encryption} onValueChange={(v) => handleSettingChange("mail_encryption", v)}>
-                                                            <SelectTrigger><SelectValue /></SelectTrigger>
-                                                            <SelectContent>
-                                                                  <SelectItem value="tls">TLS</SelectItem>
-                                                                  <SelectItem value="ssl">SSL</SelectItem>
-                                                                  <SelectItem value="none">无</SelectItem>
-                                                            </SelectContent>
-                                                      </Select>
-                                                </div>
-                                          </div>
-                                          <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                      <Label>SMTP用户名</Label>
-                                                      <Input value={settings.mail_username} onChange={(e) => handleSettingChange("mail_username", e.target.value)} />
-                                                </div>
-                                                <div className="space-y-2">
-                                                      <Label>SMTP密码</Label>
-                                                      <Input type="password" value={settings.mail_password} onChange={(e) => handleSettingChange("mail_password", e.target.value)} />
-                                                </div>
                                           </div>
                                     </CardContent>
                               </Card>
