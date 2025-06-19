@@ -1,5 +1,8 @@
 import Link from "next/link"
 import { User } from "@prisma/client"
+import { useMutation } from "@tanstack/react-query"
+import axios, { AxiosError } from "axios"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,6 +17,27 @@ interface MemberCardProps {
 
 export function MemberCard({ member }: MemberCardProps) {
   const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('').toUpperCase()
+
+  const { mutate: addFriend, isPending } = useMutation({
+    mutationFn: async (targetUserId: string) => {
+      const { data } = await axios.post("/api/community/friends/requests", { targetUserId })
+      return data
+    },
+    onSuccess: () => {
+      toast.success("好友请求已发送！")
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 409) {
+          toast.info("请求已发送或已是好友关系。")
+        } else {
+          toast.error("发送请求失败，请稍后再试。")
+        }
+      } else {
+        toast.error("发生未知错误。")
+      }
+    },
+  })
 
   return (
     <Card>
@@ -43,8 +67,8 @@ export function MemberCard({ member }: MemberCardProps) {
         <Button variant="outline" size="sm" asChild>
           <Link href={`/community/members/${member.id}`}>查看资料</Link>
         </Button>
-        <Button variant="outline" size="sm">
-          添加好友
+        <Button variant="outline" size="sm" onClick={() => addFriend(member.id)} disabled={isPending}>
+          {isPending ? "发送中..." : "添加好友"}
         </Button>
       </CardFooter>
     </Card>
