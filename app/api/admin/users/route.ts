@@ -36,13 +36,9 @@ export async function GET(req: Request) {
             const totalUsers = await db.user.count({ where });
 
             return NextResponse.json({
-                  data: users,
-                  pagination: {
-                        page,
-                        limit,
-                        total: totalUsers,
-                        totalPages: Math.ceil(totalUsers / limit),
-                  },
+                  users: users,
+                  totalUsers: totalUsers,
+                  totalPages: Math.ceil(totalUsers / limit),
             });
       } catch (error) {
             console.error("[ADMIN_USERS_GET]", error);

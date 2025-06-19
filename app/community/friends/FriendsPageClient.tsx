@@ -1,6 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import { User } from "@prisma/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,74 +24,11 @@ import {
   PlusCircle,
 } from "lucide-react"
 import Link from "next/link"
+import { MemberCard, MemberCardSkeleton } from "@/components/member-card"
 
 export default function FriendsPageClient() {
   const [activeTab, setActiveTab] = useState("friends")
   const [searchQuery, setSearchQuery] = useState("")
-
-  // 模拟好友数据
-  const friends = [
-    {
-      id: 1,
-      name: "张三",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "算法工程师",
-      department: "机器人研究组",
-      online: true,
-      lastActive: "刚刚",
-      skills: ["机器学习", "计算机视觉", "ROS开发"],
-      projects: ["四足机器人开发", "视觉SLAM系统"],
-      competitions: ["RoboMaster 2023", "智能车竞赛"],
-    },
-    {
-      id: 2,
-      name: "李四",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "机械工程师",
-      department: "机械设计组",
-      online: false,
-      lastActive: "2小时前",
-      skills: ["机械设计", "3D建模", "结构分析"],
-      projects: ["四足机器人开发", "智能家居系统"],
-      competitions: ["RoboMaster 2023"],
-    },
-    {
-      id: 3,
-      name: "王五",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "电子工程师",
-      department: "电子设计组",
-      online: true,
-      lastActive: "刚刚",
-      skills: ["PCB设计", "嵌入式系统", "传感器集成"],
-      projects: ["无人机自主导航系统"],
-      competitions: ["中国机器人大赛"],
-    },
-    {
-      id: 4,
-      name: "赵六",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "软件工程师",
-      department: "软件开发组",
-      online: false,
-      lastActive: "1天前",
-      skills: ["Web开发", "移动应用", "数据库"],
-      projects: ["实验室管理系统"],
-      competitions: ["互联网+创新创业大赛"],
-    },
-    {
-      id: 5,
-      name: "钱七",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "项目经理",
-      department: "项目管理组",
-      online: true,
-      lastActive: "刚刚",
-      skills: ["项目管理", "团队协作", "需求分析"],
-      projects: ["四足机器人开发", "无人机自主导航系统"],
-      competitions: ["挑战杯"],
-    },
-  ]
 
   // 模拟好友请求数据
   const friendRequests = [
@@ -186,14 +126,20 @@ export default function FriendsPageClient() {
     },
   ]
 
+  const { data: friends = [], isLoading: isLoadingFriends } = useQuery<User[]>({
+    queryKey: ["friends"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/community/friends")
+      return data
+    },
+    enabled: activeTab === 'friends', // Only fetch when the tab is active
+  })
+
   // 过滤好友列表
   const filteredFriends = friends.filter(
     (friend) =>
-      friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      friend.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      friend.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      friend.skills.some((skill) => skill.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      friend.projects.some((project) => project.toLowerCase().includes(searchQuery.toLowerCase())),
+      friend.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      friend.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
@@ -246,63 +192,15 @@ export default function FriendsPageClient() {
 
         <TabsContent value="friends" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredFriends.map((friend) => (
-              <Card key={friend.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={friend.avatar || "/placeholder.svg"} alt={friend.name} />
-                      <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-medium">{friend.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {friend.role} · {friend.department}
-                          </p>
-                        </div>
-                        <Badge
-                          variant={friend.online ? "default" : "outline"}
-                          className={friend.online ? "text-green-500" : "text-gray-400"}
-                        >
-                          {friend.online ? "在线" : friend.lastActive}
-                        </Badge>
-                      </div>
-                      <div className="mt-4 flex items-center gap-2">
-                        <Button size="sm" variant="outline" asChild>
-                          <Link href={`/community/members/${friend.id}`}>
-                            <MessageSquare className="mr-2 h-3 w-3" />
-                            发送消息
-                          </Link>
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="ghost">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Share2 className="mr-2 h-4 w-4" />
-                              邀请协作
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <UserMinus className="mr-2 h-4 w-4" />
-                              取消关注
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <UserX className="mr-2 h-4 w-4" />
-                              删除好友
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoadingFriends ? (
+              Array.from({ length: 3 }).map((_, i) => <MemberCardSkeleton key={i} />)
+            ) : filteredFriends.length > 0 ? (
+              filteredFriends.map((friend) => (
+                <MemberCard key={friend.id} member={friend} />
+              ))
+            ) : (
+              <p className="col-span-full text-center text-muted-foreground">您还没有好友。</p>
+            )}
           </div>
         </TabsContent>
 

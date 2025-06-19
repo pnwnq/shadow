@@ -1,6 +1,9 @@
 "use client"
 
 import type React from "react"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import { User } from "@prisma/client"
 
 import { useState } from "react"
 import { ChevronDown, Filter, Search, SlidersHorizontal } from "lucide-react"
@@ -15,73 +18,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { MemberCard } from "@/components/member-card"
-
-// 模拟数据
-const members = [
-  {
-    id: "zhangsan",
-    name: "张三",
-    avatar: "ZS",
-    role: "管理员",
-    online: true,
-    major: "电子工程",
-    grade: "2020级",
-    tags: ["Arduino", "PCB设计"],
-  },
-  {
-    id: "lisi",
-    name: "李四",
-    avatar: "LS",
-    role: "项目负责人",
-    online: true,
-    major: "通信工程",
-    grade: "2021级",
-    tags: ["树莓派", "Python"],
-  },
-  {
-    id: "wangwu",
-    name: "王五",
-    avatar: "WW",
-    role: "普通成员",
-    online: false,
-    major: "计算机科学",
-    grade: "2022级",
-    tags: ["传感器", "物联网"],
-  },
-  {
-    id: "zhaoliu",
-    name: "赵六",
-    avatar: "ZL",
-    role: "普通成员",
-    online: false,
-    major: "自动化",
-    grade: "2021级",
-    tags: ["单片机", "机器人"],
-  },
-]
+import { MemberCard, MemberCardSkeleton } from "@/components/member-card"
 
 export default function MembersPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [filteredMembers, setFilteredMembers] = useState(members)
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value
-    setSearchTerm(term)
+  const { data: members = [], isLoading } = useQuery<User[]>({
+    queryKey: ["community-members"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/community/members")
+      return data
+    },
+  })
 
-    if (!term.trim()) {
-      setFilteredMembers(members)
-      return
-    }
-
-    const filtered = members.filter(
-      (member) =>
-        member.name.toLowerCase().includes(term.toLowerCase()) ||
-        member.major.toLowerCase().includes(term.toLowerCase()) ||
-        member.tags.some((tag) => tag.toLowerCase().includes(term.toLowerCase())),
-    )
-    setFilteredMembers(filtered)
-  }
+  const filteredMembers = members.filter(
+    (member) =>
+      member.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
     <main className="flex-1 space-y-4 p-4 md:p-8">
@@ -95,7 +49,7 @@ export default function MembersPage() {
               placeholder="搜索成员..."
               className="w-64 rounded-lg pl-8"
               value={searchTerm}
-              onChange={handleSearch}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -139,7 +93,9 @@ export default function MembersPage() {
         </DropdownMenu>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredMembers.length > 0 ? (
+        {isLoading ? (
+          Array.from({ length: 8 }).map((_, i) => <MemberCardSkeleton key={i} />)
+        ) : filteredMembers.length > 0 ? (
           filteredMembers.map((member) => <MemberCard key={member.id} member={member} />)
         ) : (
           <div className="col-span-full flex h-40 items-center justify-center rounded-lg border p-8 text-center">

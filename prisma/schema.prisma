@@ -40,6 +40,10 @@ model User {
   ownedItems   Item[]    @relation("ItemOwner")
   borrowedItems Item[]    @relation("ItemBorrower")
   itemLogs     ItemLog[]
+
+  // Friendship relations
+  sentFriendRequests     Friendship[] @relation("sentFriendRequests")
+  receivedFriendRequests Friendship[] @relation("receivedFriendRequests")
 }
 
 model Account {
@@ -304,4 +308,26 @@ model Notification {
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Friendship {
+  id        String           @id @default(cuid())
+  status    FriendshipStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  requester   User @relation("sentFriendRequests", fields: [requesterId], references: [id], onDelete: Cascade)
+  requesterId String
+
+  receiver   User @relation("receivedFriendRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String
+
+  @@unique([requesterId, receiverId])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
 }
